@@ -1,5 +1,5 @@
 if defined?(ZipDir)
-  class ZipDir::Unzipper
+  class ZipDir::Zipper
     def add_and_cleanup_dir(dir)
       return unless dir.valid?
 
