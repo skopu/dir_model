@@ -1,8 +1,6 @@
 # DirModel
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/dir_model`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Import and export directories with an ORM-like interface.
 
 ## Installation
 
@@ -22,20 +20,91 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Export
+```ruby
+class ImageDir < DirModel::Export
+  file :zone_image
 
-## Development
+  def zone_image_source
+    File.new("spec/fixtures/image.png")
+  end
+  def zone_image_name
+    "testing.png"
+  end
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+  def _generate
+    mk_chdir "level1" do
+      mk_chdir "level2" do
+        copy_file :zone_image
+      end
+    end
+  end
+end
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+image_dir = ImageDir.new
+image_dir.path # => path representing the above: "#{image_dir.path}/level1/level2/testing.png"
+```
 
-## Contributing
+## zip_dir
+Use [`zip_dir`](https://github.com/FinalCAD/zip_dir) to zip DirModel::Export instances:
+```ruby
+# Zip
+zipper = ZipDir::Zipper.new
+zip_file = zipper.generate do |z|
+  z.add_and_cleanup_dir __dir_model_export__
+end
+```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/dir_model.
+**Ensure that `require zip_dir` occurs before `dir_model`**
 
+## Future
+Define a schema for the directory.
+```ruby
+class ImageDir
+  include DirModel
+  
+  file :zone_image, path: "{{root}}/{{branch}}", name: "{{zone_name}}" 
+end
+```
 
-## License
+To export, define your export model like [`ActiveModel::Serializer`](https://github.com/rails-api/active_model_serializers)
+and generate the directory requirements:
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+```ruby
+class ImageExportDir < ImageDir
+  include DirModel::Export
+  
+  # below are method overrides with default implementation
+  #
+  # overriding is recommended
+  #
+  def root; source_model.root end
+  def branch; source_model.branch end
+  def zone_name; source_model.zone_name end
+  
+  # define your image source
+  #
+  # override with something like: File.new("path/to/image.png")
+  #
+  def zone_image
+    source_model.zone_image
+  end
+end
+```
 
+To import, define your import model, which works like [`ActiveRecord`](http://guides.rubyonrails.org/active_record_querying.html)
+wrapping over a directory:
+
+```ruby
+class ImageImportDir < ImageDir
+  include DirModel::Import
+  
+  #
+  # below are method overrides with default implementation
+  #
+  def root; "level1" end
+  def branch; "level2" end
+  def zone_name; "testing" end
+  def zone_image; File.new("....") end
+end
+```

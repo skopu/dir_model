@@ -1,19 +1,19 @@
 require 'spec_helper'
 
 class ImageDir < DirModel::Export
-  file :image
+  file :zone_image
 
-  def image_source
+  def zone_image_source
     File.new("spec/fixtures/image.png")
   end
-  def image_name
+  def zone_image_name
     "testing.png"
   end
 
   def _generate
     mk_chdir "level1" do
       mk_chdir "level2" do
-        copy_file :image
+        copy_file :zone_image
       end
     end
   end
