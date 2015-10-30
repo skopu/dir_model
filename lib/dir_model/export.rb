@@ -1,5 +1,6 @@
 module DirModel
   class Export
+
     def path
       generate unless generated?
       @temp_path
@@ -18,9 +19,11 @@ module DirModel
     def file_sources
       self.class.files.map { |file| file_source(file) }
     end
+
     def file_source(file)
       public_send(self.class.file_source_method_name(file))
     end
+
     def file_name(file)
       File.join(*pwd, public_send(self.class.file_name_method_name(file)))
     end
@@ -28,6 +31,7 @@ module DirModel
     def generated?
       !!@generated
     end
+
     def generate
       cleanup if generated?
       @temp_path = Dir.mktmpdir
@@ -44,6 +48,7 @@ module DirModel
     end
 
     protected
+    
     attr_reader :pwd
 
     def copy_file(file)
