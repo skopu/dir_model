@@ -1,23 +1,26 @@
 module DirModel
   module Export
 
-    attr_reader :source_model, :context, :root_dir
+    attr_reader :source_model, :context
 
     # @param [Model] source_model object to export to files
     # @param [Hash]  context
     def initialize(source_model, context={})
       @source_model = source_model
       @context      = OpenStruct.new(context)
-      @root_dir     = Dir.mktmpdir
-      @paths        = []
+      @root_path    = Dir.mktmpdir
     end
 
     def paths
       generate unless generated?
-      @paths
+      entry_paths
     end
 
     private
+
+    def entry_paths
+      Dir.clean_entries(@root_path).map { |entry| File.join(@root_path, entry) }
+    end
 
     def generated?
       !!@generated
@@ -28,21 +31,18 @@ module DirModel
 
       self.class.files.each do |file_name, options|
         dir_path  = File.join(*path_from_template_string(options[:path]))
-        real_name = self.public_send(options[:name])
-        file_path = File.join(dir_path, real_name)
+        file_path = File.join(dir_path, self.public_send(options[:name]))
 
-        @paths << [real_name, dir_path, file_path]
+        mkdir { File.join(@root_path, dir_path) }
 
-        mkdir { File.join(root_dir, dir_path) }
-
-        File.open(File.join(root_dir, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
+        File.open(File.join(@root_path, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
       end
     ensure
       @generated = true
     end
 
     def cleanup
-      @paths.each { |path| FileUtils.remove_entry_secure path }
+      entry_paths.each { |file_path| FileUtils.remove_entry_secure file_path }
       @generated = false
     end
 
