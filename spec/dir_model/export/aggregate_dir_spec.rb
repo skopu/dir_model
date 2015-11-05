@@ -10,7 +10,8 @@ describe DirModel::Export::AggregateDir do
 
     it '' do
       subject
-      expect(instance.paths).to eql(['tmp/root_dir_42/Sectors/sector_name/zone_name'])
+      expect(instance.paths).to eql(['tmp/root_dir_42/Sectors/sector_name/zone_name.png'])
+      expect(File.exists?(File.join(instance.copy_path, instance.paths.first))).to be_truthy
     end
   end
 end
