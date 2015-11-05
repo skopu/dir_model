@@ -1,4 +1,8 @@
-require "dir_model/version"
+require 'dir_model/version'
+
+require 'active_support/concern'
+
+require 'dir_model/utils'
 
 require 'dir_model/core_ext/dir'
 require 'dir_model/core_ext/zip_dir/zipper'
@@ -6,14 +10,13 @@ require 'dir_model/core_ext/zip_dir/zipper'
 require 'dir_model/export'
 require 'dir_model/export/aggregate_dir'
 
-require 'active_support/concern'
-
 require 'inherited_class_var'
 
 module DirModel
   extend ActiveSupport::Concern
 
   included do
+    include Utils
     include InheritedClassVar
     inherited_class_hash :files
   end

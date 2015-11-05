@@ -3,6 +3,7 @@ require 'active_support/hash_with_indifferent_access'
 module DirModel
   module Export
     class AggregateDir
+      include Utils
 
       attr_reader :export_dir_model_class, :context, :paths, :copy_path
 
@@ -36,10 +37,6 @@ module DirModel
       def add_path(source_path, dir_path)
         dest_path = mkdir { File.join(copy_path, dir_path) }
         FileUtils.cp_r source_path, dest_path.first
-      end
-
-      def mkdir
-        FileUtils.mkdir_p(yield)
       end
 
     end

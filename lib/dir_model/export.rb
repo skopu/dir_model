@@ -41,10 +41,6 @@ module DirModel
       @generated = true
     end
 
-    def mkdir
-      FileUtils.mkdir_p(yield)
-    end
-
     def cleanup
       @paths.each { |path| FileUtils.remove_entry_secure path }
       @generated = false

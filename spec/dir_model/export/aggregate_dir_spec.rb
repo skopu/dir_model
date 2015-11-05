@@ -8,7 +8,7 @@ describe DirModel::Export::AggregateDir do
   describe "#generate" do
     subject { instance.generate { |dir| dir << source_model } }
 
-    it '' do
+    it 'should be generate files' do
       subject
       expect(instance.paths).to eql(['tmp/root_dir_42/Sectors/sector_name/zone_name.png'])
       expect(File.exists?(File.join(instance.copy_path, instance.paths.first))).to be_truthy
