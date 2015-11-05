@@ -18,8 +18,7 @@ module DirModel
       # @param [Hash] context the extra context given to the instance of the file model
       def append_model(source_model, context={})
         dir_model = export_dir_model_class.new(source_model, context.reverse_merge(self.context))
-        dir_model.paths.each do |file_name, dir_path|
-          file_path = File.join(dir_path, file_name)
+        dir_model.paths.each do |file_name, dir_path, file_path|
           @paths << file_path
           add_path(File.join(dir_model.root_dir, file_path), dir_path)
         end

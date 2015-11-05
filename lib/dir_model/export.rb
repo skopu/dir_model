@@ -31,7 +31,7 @@ module DirModel
         real_name = self.public_send(options[:name])
         file_path = File.join(dir_path, real_name)
 
-        @paths << [real_name, dir_path]
+        @paths << [real_name, dir_path, file_path]
 
         mkdir { File.join(root_dir, dir_path) }
 
