@@ -22,8 +22,19 @@ module DirModel
 
       def generate
         @paths ||= []
+        # need #generated? method
         yield self
       end
+
+      # # not the real implementation
+      # # please replace: https://github.com/FinalCAD/dir_model/blob/4dfa789fcd54b52cfd44de4d6bc80f68dcbe202c/lib/dir_model/core_ext/zip_dir/zipper.rb#L6-L6
+      # #
+      # # and do something like this: https://github.com/FinalCAD/zip_dir/blob/16a915db065a96624f3f357b1be31c80afc1e4bf/lib/zip_dir/zipper.rb#L10-L10
+      # #
+      # # so we don't need to think about paths
+      # def path
+      #   @paths.first
+      # end
     end
   end
 end
