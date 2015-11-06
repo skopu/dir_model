@@ -9,7 +9,7 @@ class ModelImage
   end
 
   def zone_name
-    'zone_name.png'
+    'zone_name'
   end
 
   def zone

@@ -13,11 +13,11 @@ class ImageExportDir < ImageDir
     source_model.sector_name
   end
 
-  def my_image_name
+  def image_name
     source_model.zone_name
   end
 
-  def my_image
+  def image
     source_model.zone
   end
 end

@@ -30,8 +30,8 @@ module DirModel
       cleanup if generated?
 
       self.class.files.each do |file_name, options|
-        dir_path  = File.join(*path_from_template_string(options[:path]))
-        file_path = File.join(dir_path, self.public_send(options[:name]))
+        dir_path  = instance_exec(&options[:path])
+        file_path = File.join(dir_path, instance_exec(&options[:name]))
 
         mkdir { File.join(@root_path, dir_path) }
 
@@ -44,12 +44,6 @@ module DirModel
     def cleanup
       entry_paths.each { |file_path| FileUtils.remove_entry_secure file_path }
       @generated = false
-    end
-
-    def path_from_template_string(path)
-      path.scan(/{{(?<value>[^{}]*)}}/).map do |dir_name|
-        self.public_send(dir_name.first)
-      end
     end
   end
 end
