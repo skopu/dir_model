@@ -5,13 +5,13 @@ module DirModel
     class AggregateDir
       include Utils
 
-      attr_reader :export_dir_model_class, :context, :paths, :copy_path
+      attr_reader :export_dir_model_class, :context, :dir_path
 
       # @param [Export] export_model export model class
       def initialize(export_dir_model_class, context={})
         @export_dir_model_class = export_dir_model_class
         @context                = context.to_h.symbolize_keys
-        @copy_path              = Dir.mktmpdir
+        @dir_path              = Dir.mktmpdir
       end
 
       # Add a row_model to the
@@ -25,15 +25,14 @@ module DirModel
       alias_method :<<, :append_model
 
       def generate
-        @paths ||= []
-        # need #generated? method
         yield self
+        self
       end
 
       private
 
       def add_path(source_path)
-        FileUtils.cp_r source_path, @copy_path
+        FileUtils.cp_r source_path, dir_path
       end
 
     end
