@@ -11,7 +11,7 @@ describe DirModel::Export::AggregateDir do
 
     it 'should be generate files' do
       subject
-      expect(File.exists?(File.join(instance.dir_path, file_path))).to be_truthy
+      expect(File.exists?(instance.full_path(file_path))).to be_truthy
     end
   end
 end

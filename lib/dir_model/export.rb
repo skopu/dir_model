@@ -11,16 +11,12 @@ module DirModel
       @root_path    = Dir.mktmpdir
     end
 
-    def paths
+    def path
       generate unless generated?
-      entry_paths
+      @root_path
     end
 
     private
-
-    def entry_paths
-      Dir.clean_entries(@root_path).map { |entry| File.join(@root_path, entry) }
-    end
 
     def generated?
       !!@generated
