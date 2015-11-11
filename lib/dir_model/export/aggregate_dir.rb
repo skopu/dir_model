@@ -11,7 +11,7 @@ module DirModel
       def initialize(export_dir_model_class, context={})
         @export_dir_model_class = export_dir_model_class
         @context                = context.to_h.symbolize_keys
-        @dir_path              = Dir.mktmpdir
+        @dir_path               = Dir.mktmpdir
       end
 
       # Add a row_model to the

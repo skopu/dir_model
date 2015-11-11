@@ -42,7 +42,7 @@ module DirModel
     end
 
     def cleanup
-      entry_paths.each { |file_path| FileUtils.remove_entry_secure file_path }
+      FileUtils.remove_entry @root_path
       @generated = false
     end
   end
