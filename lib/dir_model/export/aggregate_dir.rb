@@ -19,7 +19,7 @@ module DirModel
       # @param [Hash] context the extra context given to the instance of the file model
       def append_model(source_model, context={})
         source_path = export_dir_model_class.new(source_model, context.reverse_merge(self.context)).path
-        FileUtils.cp_r source_path, dir_path
+        FileUtils.cp_r Dir.glob("#{source_path}/*"), dir_path
       end
       alias_method :<<, :append_model
 

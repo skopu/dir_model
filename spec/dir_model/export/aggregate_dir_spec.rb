@@ -35,16 +35,12 @@ describe DirModel::Export::AggregateDir do
     it 'should be generate files' do
       subject
 
-      Dir.clean_entries(instance.dir_path).each do |tmp_dir|
+      file_paths.each do |file_path|
         expect(
           File.exists?(
-            File.join(instance.dir_path, tmp_dir, file_paths[0])
-          ) || File.exists?(
-            File.join(instance.dir_path, tmp_dir, file_paths[1])
-          )
+            File.join(instance.dir_path, file_path))
         ).to be_truthy
       end
     end
   end
-
 end
