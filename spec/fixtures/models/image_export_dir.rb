@@ -1,10 +1,6 @@
 class ImageExportDir < ImageDir
   include DirModel::Export
 
-  def root
-    "tmp/root_dir_#{source_model.id}"
-  end
-
   def dir
     'Sectors'
   end
