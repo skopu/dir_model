@@ -21,28 +21,50 @@ Or install it yourself as:
 ## Usage
 
 ### Export
+
 ```ruby
-class ImageDir < DirModel::Export
-  file :zone_image
+class ImageDir
+  include DirModel
 
-  def zone_image_source
-    File.new("spec/fixtures/image.png")
-  end
-  def zone_image_name
-    "testing.png"
+  file :image, path: -> { "#{dir}/#{sub_dir}" }, name: -> { "#{image_name}.png" }
+end
+
+class ImageExportDir < ImageDir
+  include DirModel::Export
+
+  def dir
+    'Sectors'
   end
 
-  def _generate
-    mk_chdir "level1" do
-      mk_chdir "level2" do
-        copy_file :zone_image
-      end
-    end
+  def sub_dir
+    source_model.sector_name
+  end
+
+  def image_name
+    source_model.zone_name
+  end
+
+  def image
+    source_model.zone
   end
 end
 
-image_dir = ImageDir.new
-image_dir.path # => path representing the above: "#{image_dir.path}/level1/level2/testing.png"
+fixture_models = [
+  OpenStruct.new({
+    id: 42,
+    sector_name: 'sector_name',
+    zone_name: 'zone_name',
+    zone: File.new('spec/fixtures/image.png'),
+  })
+]
+
+exporter = DirModel::Export::AggregateDir.new(ImageExportDir)
+
+exporter.generate do |dir|
+  models.each { |model| dir << model }
+end
+
+exporter.dir_path # => path of generated dir .../Sectors
 ```
 
 ## zip_dir
