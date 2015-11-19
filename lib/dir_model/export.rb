@@ -1,82 +1,45 @@
 module DirModel
-  class Export
+  module Export
+
+    attr_reader :source_model, :context
+
+    # @param [Model] source_model object to export to files
+    # @param [Hash]  context
+    def initialize(source_model, context={})
+      @source_model = source_model
+      @context      = OpenStruct.new(context)
+      @root_path    = Dir.mktmpdir
+    end
+
     def path
       generate unless generated?
-      @temp_path
+      @root_path
     end
 
-    def entry_paths
-      Dir.clean_entries(path).map {|entry| File.join path, entry }
-    end
-
-    def valid?
-      !file_sources.any? { |file_source| file_source.nil? || file_source.read.nil? }
-    rescue
-      false
-    end
-
-    def file_sources
-      self.class.files.map { |file| file_source(file) }
-    end
-    def file_source(file)
-      public_send(self.class.file_source_method_name(file))
-    end
-    def file_name(file)
-      File.join(*pwd, public_send(self.class.file_name_method_name(file)))
-    end
+    private
 
     def generated?
       !!@generated
     end
+
     def generate
       cleanup if generated?
-      @temp_path = Dir.mktmpdir
 
-      @pwd = [@temp_path]
-      _generate
+      self.class.files.each do |file_name, options|
+        dir_path  = instance_exec(&options[:path])
+        file_path = File.join(dir_path, instance_exec(&options[:name]))
+
+        mkdir { File.join(@root_path, dir_path) }
+
+        File.open(File.join(@root_path, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
+      end
     ensure
       @generated = true
     end
 
     def cleanup
-      FileUtils.remove_entry_secure @temp_path
+      FileUtils.remove_entry @root_path
       @generated = false
-    end
-
-    protected
-    attr_reader :pwd
-
-    def copy_file(file)
-      File.open(file_name(file), 'wb') {|f| f.write(file_source(file).read) }
-    end
-
-    def _generate
-      raise NotImplementedError.new("Missing #{self.class} implementation")
-    end
-
-    def mk_chdir(dir, *permissions_int)
-      @pwd << dir
-      Dir.mkdir(File.join(*pwd), *permissions_int)
-      yield
-    ensure
-      @pwd.pop
-    end
-
-    class << self
-      attr_reader :files
-
-      def file(*files)
-        @files ||= []
-        @files += files
-      end
-
-      def file_name_method_name(file)
-        "#{file}_name"
-      end
-
-      def file_source_method_name(file)
-        "#{file}_source"
-      end
     end
   end
 end
