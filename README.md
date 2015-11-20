@@ -24,7 +24,7 @@ Or install it yourself as:
 
 ```ruby
 class ImageDir
-  include DirModel
+  include DirModel::Model
 
   file :image, path: -> { "#{dir}/#{sub_dir}" }, name: -> { "#{image_name}.png" }
 end

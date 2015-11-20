@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DirModel::Export do
   let(:klass) do
     Class.new do
-      include DirModel
+      include DirModel::Model
       include DirModel::Export
     end
   end
