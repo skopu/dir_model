@@ -13,7 +13,8 @@ require 'dir_model/export'
 require 'dir_model/export/aggregate_dir'
 
 require 'dir_model/import'
-require 'dir_model/import/aggregate_dir'
+require 'dir_model/import/dir'
+require 'dir_model/import/path'
 
 require 'inherited_class_var'
 

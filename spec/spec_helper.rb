@@ -1,5 +1,7 @@
 Bundler.require(:default, :test)
 
+require 'pry'
+
 require 'dir_model'
 
 Dir[Dir.pwd + '/spec/fixtures/**/*.rb'].each { |f| require f }
