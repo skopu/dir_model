@@ -17,13 +17,13 @@ describe DirModel::Import::Path do
     end
   end
 
-  describe '#reset' do
-    subject { instance.reset }
+  describe '#reset!' do
+    subject { instance.reset! }
 
-    it 'sets the state back to reset' do
+    it 'sets the state back to reset!' do
       expect(instance.read_path).to eql('spec/fixtures/unzip_dir/sectors')
       second_path? instance
-      expect(subject).to be_truthy
+      subject
       start? instance
       expect(instance.read_path).to eql('spec/fixtures/unzip_dir/sectors')
     end
@@ -61,13 +61,22 @@ describe DirModel::Import::Path do
     end
   end
 
+  describe '#pointer' do
+    before { 2.times.each { instance.read_path }}
+
+    it 'works and goes to end paths' do
+      expect(instance.previous_path).to eql('spec/fixtures/unzip_dir/sectors')
+      expect(instance.current_path).to eql('spec/fixtures/unzip_dir/sectors/sector_1.png')
+      expect(instance.next_path).to eql('spec/fixtures/unzip_dir/zones')
+    end
+  end
+
   def start?(instance)
     expect(instance.index).to eql(-1)
     expect(instance.current_path).to be_nil
   end
 
   describe '#read_path' do
-    subject { instance.read_path }
 
     it 'works and goes to end paths' do
       expect(instance.read_path).to eql('spec/fixtures/unzip_dir/sectors')

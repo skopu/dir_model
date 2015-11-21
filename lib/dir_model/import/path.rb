@@ -5,21 +5,20 @@ module DirModel
       attr_reader :path
       attr_reader :index
       attr_reader :current_path
+      attr_reader :previous_path
 
       def initialize(path)
         @path = path
-        reset
+        reset!
       end
 
       def size
-        @size ||= _ruby_path.size
+        @size ||= ruby_path.size
       end
 
-      def reset
+      def reset!
         @index = -1
-        @current_path = nil
-        @ruby_path = _ruby_path
-        true
+        @current_path = @ruby_path = nil
       end
 
       def start?
@@ -35,34 +34,41 @@ module DirModel
       end
 
       def read_path
-        if @next_path
-          @current_path = @next_path
-          @next_path = nil
-          increment_index(@current_path)
-        else
-          @current_path = _read_path { |path| increment_index(path) }
+        @previous_path = @current_path
+        unless caching_value?
+          @current_path = _read_path { forward! }
         end
         current_path
       end
 
       protected
 
-      def _ruby_path
-        Pathname.glob("spec/#{path}/**/*").each
+      def caching_value?
+        if @next_path
+          @current_path = @next_path
+          @next_path = nil
+          forward!
+          true
+        else
+          false
+        end
       end
 
-      def _read_path(index=@index, ruby_path=@ruby_path)
+      def ruby_path
+        @ruby_path ||= Pathname.glob("spec/#{path}/**/*").each
+      end
+
+      def _read_path
         path = ruby_path.next.to_path
-        index += 1 if index
-        yield path if block_given?
+        yield if block_given?
         path
       rescue StopIteration
         set_end
        nil
       end
 
-      def increment_index(current_path)
-        current_path.nil? ? set_end : @index += 1
+      def forward!
+        @index += 1
       end
 
       def set_end

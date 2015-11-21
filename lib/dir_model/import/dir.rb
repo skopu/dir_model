@@ -11,7 +11,7 @@ module DirModel
       attr_reader :context
       attr_reader :current_dir_model
 
-      def_delegators :@path, :end?, :reset
+      def_delegators :@path, :end?
 
       def initialize(source_path, import_dir_model_class, context={})
         @path, @import_dir_model_class, @context = Path.new(source_path), import_dir_model_class, context.to_h.symbolize_keys
@@ -19,7 +19,7 @@ module DirModel
       end
 
       def reset
-        path.reset
+        path.reset!
         @index = -1
         @current_dir_model = nil
       end
