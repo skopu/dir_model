@@ -11,20 +11,6 @@ describe DirModel::Import do
   let(:source_path) { nil }
   let(:instance)    { klass.new(source_path, context) }
 
-  describe '#skip?' do
-    subject { instance.skip? }
-
-    it 'is false when match' do
-      instance.instance_variable_set(:@_match, true)
-      expect(subject).to be_falsey
-    end
-
-    it 'is true when does not match' do
-      instance.instance_variable_set(:@_match, false)
-      expect(subject).to be_truthy
-    end
-  end
-
   describe '#match?' do
     let(:klass) { ImageImportDir }
 
