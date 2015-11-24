@@ -38,7 +38,7 @@ module DirModel
 
         @current_dir_model = import_dir_model_class.next(path, context.to_h.reverse_merge(self.context))
         @index += 1
-        @current_row_model = @index = nil if end?
+        @current_dir_model = @index = nil if end?
 
         current_dir_model
       end
