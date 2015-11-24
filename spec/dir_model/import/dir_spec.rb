@@ -62,7 +62,9 @@ describe DirModel::Import::Dir do
     context 'with skips on even paths' do
       let(:model_class) do
         Class.new(ImageImportDir) do
-          def skip?; index % 2 == 1 end
+          def skip?
+            ((index||0) % 2 == 1)
+          end
           def self.name; 'ImageImportDirWithSkip' end
         end
       end

@@ -15,12 +15,12 @@ describe DirModel::Import do
     subject { instance.skip? }
 
     it 'is false when match' do
-      expect(instance).to receive(:match?) { true }
+      instance.instance_variable_set(:@_match, true)
       expect(subject).to be_falsey
     end
 
     it 'is true when does not match' do
-      expect(instance).to receive(:match?) { false }
+      instance.instance_variable_set(:@_match, false)
       expect(subject).to be_truthy
     end
   end
