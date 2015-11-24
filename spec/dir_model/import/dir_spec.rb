@@ -54,6 +54,27 @@ describe DirModel::Import::Dir do
         expect(instance.end?).to eql true
       end
     end
-
   end
+
+  describe '#each' do
+    subject { instance.each }
+
+    context 'with skips on even paths' do
+      let(:model_class) do
+        Class.new(ImageImportDir) do
+          def skip?; index % 2 == 1 end
+          def self.name; 'ImageImportDirWithSkip' end
+        end
+      end
+
+      it 'skips twice' do
+        expect(subject.next.index).to eql(0)
+        expect(subject.next.index).to eql(2)
+        expect(subject.next.index).to eql(4)
+
+        expect { subject.next }.to raise_error(StopIteration)
+      end
+    end
+  end
+
 end
