@@ -10,6 +10,7 @@ module DirModel
       attr_reader :import_dir_model_class
       attr_reader :context
       attr_reader :current_dir_model
+      attr_reader :previous_dir_model
 
       def_delegators :@path, :end?
 
@@ -36,7 +37,9 @@ module DirModel
       def next(context={})
         return if end?
 
-        @current_dir_model = import_dir_model_class.next(path, context.to_h.reverse_merge(self.context))
+        context = context.to_h.reverse_merge(self.context)
+        @previous_dir_model = current_dir_model
+        @current_dir_model = import_dir_model_class.next(path, context, previous_dir_model)
         @index += 1
         @current_dir_model = @index = nil if end?
 

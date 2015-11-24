@@ -2,12 +2,11 @@ module DirModel
   module Import
     extend ActiveSupport::Concern
 
-    attr_reader :context, :source_path
+    attr_reader :context, :source_path, :index, :previous
 
-    # @param [Hash] context
-    def initialize(path, context={})
-      @context = OpenStruct.new(context)
-      @source_path = path
+    def initialize(path, options={})
+      @source_path, @context = path, OpenStruct.new(options[:context])
+      @index, @previous = options[:index], options[:previous].try(:dup)
     end
 
     def skip?
@@ -15,9 +14,9 @@ module DirModel
     end
 
     module ClassMethods
-      def next(path, context={})
+      def next(path, context={}, previous=nil)
         path.read_path
-        new(path.current_path, index: path.index, context: context)
+        new(path.current_path, index: path.index, context: context, previous: previous)
       end
     end
 
