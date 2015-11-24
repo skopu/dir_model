@@ -23,7 +23,10 @@ module DirModel
     private
 
     def match?
-      true # raise NotImplementedError.new
+      self.class.files.each do |file, attributes|
+        return true if source_path.match(attributes[:regex].call)
+      end
+      false
     end
   end
 end

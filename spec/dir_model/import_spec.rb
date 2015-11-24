@@ -15,6 +15,7 @@ describe DirModel::Import do
     subject { instance.skip? }
 
     it 'is false when match' do
+      expect(instance).to receive(:match?) { true }
       expect(subject).to be_falsey
     end
 
@@ -23,4 +24,27 @@ describe DirModel::Import do
       expect(subject).to be_truthy
     end
   end
+
+  describe '#match?' do
+    let(:klass) { ImageImportDir }
+
+    subject { instance.send :match? }
+
+    context "when path doesn't match" do
+      let(:source_path) { 'spec/fixtures/unzip_dir/sectors' }
+
+      it 'should return false' do
+        expect(subject).to eql(false)
+      end
+    end
+
+    context 'when path match' do
+      let(:source_path) { 'zones/sector_1/zone_1.png' }
+
+      it 'should return true' do
+        expect(subject).to eql(true)
+      end
+    end
+  end
+
 end
