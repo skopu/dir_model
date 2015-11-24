@@ -1,3 +1,5 @@
+require 'inherited_class_var'
+
 require 'dir_model/version'
 
 require 'active_support/concern'
@@ -15,8 +17,6 @@ require 'dir_model/export/aggregate_dir'
 require 'dir_model/import'
 require 'dir_model/import/dir'
 require 'dir_model/import/path'
-
-require 'inherited_class_var'
 
 module DirModel
 end
