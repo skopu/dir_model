@@ -18,7 +18,7 @@ module DirModel
 
       def reset!
         @index = -1
-        @current_path = @ruby_path = nil
+        @current_path = @ruby_path = @previous_path = nil
       end
 
       def start?
