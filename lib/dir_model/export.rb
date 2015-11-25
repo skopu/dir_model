@@ -25,9 +25,11 @@ module DirModel
     def generate
       cleanup if generated?
 
-      self.class.files.each do |file_name, options|
-        dir_path  = instance_exec(&options[:path])
-        file_path = File.join(dir_path, instance_exec(&options[:name]))
+      self.class.file_names.each do |file_name|
+        options = self.class.options(file_name)
+
+        dir_path  = get_value_of(options[:path])
+        file_path = File.join(dir_path, get_value_of(options[:name]))
 
         mkdir { File.join(@root_path, dir_path) }
 
@@ -35,6 +37,11 @@ module DirModel
       end
     ensure
       @generated = true
+    end
+
+    def get_value_of(string_or_proc)
+      return string_or_proc if string_or_proc.is_a?(String)
+      instance_exec(&string_or_proc)
     end
 
     def cleanup
