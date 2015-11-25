@@ -7,19 +7,17 @@ describe DirModel::Export::AggregateDir do
   let(:file_paths) do
     [
       'Sectors/sector_name/zone_name.png',
-      'Sectors/fu_sector_name/fu_zone_name.png',
+      'Sectors/sector_name/fu_zone_name.png',
     ]
   end
 
   let(:models) do
     [OpenStruct.new({
       id: 42,
-      sector_name: 'sector_name',
       zone_name: 'zone_name',
       zone: File.new('spec/fixtures/image.png'),
     }),OpenStruct.new({
       id: 69,
-      sector_name: 'fu_sector_name',
       zone_name: 'fu_zone_name',
       zone: File.new('spec/fixtures/image.png'),
     })]

@@ -15,6 +15,10 @@ module DirModel
       @match
     end
 
+    def image
+      File.open(source_path)
+    end
+    
     def skip?
       load
       !@_match

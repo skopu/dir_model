@@ -18,10 +18,6 @@ class ImageImportDir < ImageDir
     :blueprint
   end
 
-  def image
-    File.open(path)
-  end
-
   private
 
   def sector_id
