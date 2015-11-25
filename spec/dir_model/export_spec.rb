@@ -24,4 +24,21 @@ describe DirModel::Export do
       instance.send(:generated?)
     }.from(true).to(false)
   end
+
+  context "should'nt accept bad extensions" do
+    let(:source_model) { models.first }
+
+    subject { ImageExportDir.new(source_model, {}).path }
+
+    before do
+      expect(ImageExportDir).to receive(:options).with(:image) {
+        ImageDir.files[:image].merge({extensions: [:gif]})
+      }
+    end
+
+    it 'should raise and error' do
+      expect { subject }.to raise_error('Bad extension png, should be one of [gif]')
+    end
+  end
+
 end
