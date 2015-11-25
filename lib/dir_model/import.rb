@@ -20,6 +20,13 @@ module DirModel
       !@_match
     end
 
+    def method_missing(name, *args, &block)
+      load
+      matches[name]
+    rescue IndexError
+      super
+    end
+
     module ClassMethods
       def next(path, context={}, previous=nil)
         path.read_path

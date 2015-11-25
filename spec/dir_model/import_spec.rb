@@ -30,6 +30,19 @@ describe DirModel::Import do
       it 'should return true' do
         expect(subject).to eql(true)
       end
+
+      it 'should match information' do
+        expect(instance.matches[:sector_id]).to eql('1')
+        expect(instance.matches[:zone_id]).to   eql('1')
+        expect(instance.matches[:extension]).to eql('png')
+      end
+
+      it 'match should be accessible through methods' do
+        expect(instance.sector_id).to eql('1')
+        expect(instance.zone_id).to   eql('1')
+        expect(instance.extension).to eql('png')
+        expect { instance.unexisting_method }.to raise_error(NoMethodError)
+      end
     end
   end
 
