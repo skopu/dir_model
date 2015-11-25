@@ -20,23 +20,6 @@ module DirModel
       !@_match
     end
 
-    def model
-      raise NotImplementedError
-    end
-
-    def method
-      raise NotImplementedError
-    end
-
-    def assign!
-      load
-      model.send(method, image)
-    end
-
-    def image
-      @image ||= File.open(source_path)
-    end
-
     def method_missing(name, *args, &block)
       load
       matches[name]
