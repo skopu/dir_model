@@ -51,7 +51,7 @@ module DirModel
     def get_extension(file, extensions)
       extension = FastImage.type(self.public_send(file))
       if extensions.include?(extension) or
-        extension == '*'
+        extensions == ['*']
         extension
       else
         raise StandardError.new("Bad extension #{extension}, should be one of [#{extensions.join(', ')}]")

@@ -29,7 +29,12 @@ module DirModel
         protected
 
         def file(file_name, options={})
-          merge_files(file_name.to_sym => options)
+          merge_files(file_name.to_sym => with_default_extensions(options))
+        end
+
+        def with_default_extensions(options)
+          options[:extensions] ||= ['*']
+          options
         end
 
       end
