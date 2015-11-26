@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DirModel::Import::Dir do
-  let(:source_path) { 'fixtures/unzip_dir' }
+  let(:source_path) { 'spec/fixtures/unzip_dir' }
   let(:model_class) { ImageImportDir }
   let(:instance)    { described_class.new source_path, model_class, 'some_context' => true }
   let(:paths)  do

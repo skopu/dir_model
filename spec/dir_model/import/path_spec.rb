@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DirModel::Import::Path do
-  let(:source_path) { 'fixtures/unzip_dir' }
+  let(:source_path) { 'spec/fixtures/unzip_dir' }
   let(:instance)    { described_class.new(source_path) }
   let(:paths)  do
     [ 'spec/fixtures/unzip_dir/sectors',

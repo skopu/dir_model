@@ -55,7 +55,7 @@ module DirModel
       end
 
       def ruby_path
-        @ruby_path ||= Pathname.glob("spec/#{path}/**/*").each
+        @ruby_path ||= Pathname.glob("#{path}/**/*").each
       end
 
       def _read_path
