@@ -1,5 +1,10 @@
 # Upgrading
 
+* Model is now a module you have to change include from `include DirModel` to `include DirModel::Model`
+
+# Upgrading from 0.2.0 to 0.3.0
+
+
 # Upgrading from 0.1.0 to 0.2.0
 
 You have to change
@@ -18,7 +23,7 @@ for a DirModel
 
 ```
 class ImageDir
-  include DirModel::Model
+  include DirModel
 
   file :image, path: -> { "#{dir}/#{sub_dir}" }, name: -> { "#{image_name}.png" }
 end

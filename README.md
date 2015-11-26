@@ -20,15 +20,59 @@ Or install it yourself as:
 
 ## Usage
 
+### Import
+
+```ruby
+class ImageDir
+  include DirModel::Model
+
+  file :image, regex: -> { /Zones\/Sector_(?<sector_id>.*)\/Zone_(?<zone_id>.*)\.(?<extension>png|jpg)/i }
+end
+```
+
+named matches are available under `matches[:sector_id]` or directly when you calling `sector_id`
+
+An implementation possible of Import
+
+```ruby
+class ImageImportDir < ImageDir
+  include DirModel::Import
+
+  def assign!
+    model.send(method, image)
+  end
+
+  protected
+
+  def model
+    Project.find(context[:project_id]).sectors.find(sector_id).zones.find(zone_id)
+  end
+
+  def method
+    :blueprint
+  end
+end
+```
+
+You can have access at the file through
+
+`ImageImportDir.new(source_path, project_id: 42).image`
+
 ### Export
 
 ```ruby
 class ImageDir
   include DirModel::Model
 
-  file :image, path: -> { "#{dir}/#{sub_dir}" }, name: -> { "#{image_name}.png" }
+  file :image, path: -> { "#{dir}/#{sub_dir}" }, name: -> { image_name }, extensions: [:png]
 end
+```
 
+`path` and `name` can take Proc or String if interpolation isn't needed. Isn't necessary to precise extension it be discover automatically
+
+`extensions` is optional, by default we use `extensions: ['*']` to authorize all extensions
+
+```ruby
 class ImageExportDir < ImageDir
   include DirModel::Export
 

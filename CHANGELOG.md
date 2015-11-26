@@ -1,3 +1,7 @@
+### VERSION 0.3.0
+
+* Add Import feature
+
 ### VERSION 0.2.0
 
 * Apply [CsvRowModel](https://github.com/FinalCAD/csv_row_model) pattern for export.
