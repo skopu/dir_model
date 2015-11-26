@@ -24,4 +24,20 @@ describe DirModel::Export do
       instance.send(:generated?)
     }.from(true).to(false)
   end
+
+  context 'with image' do
+    let(:klass) do
+      Class.new do
+        include DirModel::Model
+        include DirModel::Export
+
+        def image
+          File.open('spec/fixtures/image.png')
+        end
+      end
+    end
+    it 'should be guess extension' do
+      expect(instance.send(:ensure_extension, 'path/file', :image)).to eql('path/file.png')
+    end
+  end
 end

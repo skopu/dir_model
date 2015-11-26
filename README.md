@@ -70,6 +70,8 @@ end
 
 `path` and `name` can take Proc or String if doesn't have any interpolation.
 
+If you don't know the extension of your image it will be automatically discover, but this works only for image so if you send, for instance, a json file you have to explicitly provide extension on the `:name` options
+
 ```ruby
 class ImageExportDir < ImageDir
   include DirModel::Export

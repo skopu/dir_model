@@ -1,3 +1,5 @@
+require 'fastimage'
+
 module DirModel
   module Export
 
@@ -33,10 +35,24 @@ module DirModel
 
         mkdir { File.join(@root_path, dir_path) }
 
+       file_path = ensure_extension(file_path, file_name)
+
         File.open(File.join(@root_path, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
       end
     ensure
       @generated = true
+    end
+
+    def ensure_extension(file_path, file_method_name)
+      file_path_with_extension = file_path
+      if File.extname(file_path).blank?
+        if ext = FastImage.type(self.public_send(file_method_name))
+          file_path_with_extension = file_path + '.' + ext.to_s
+        else
+          raise StandardError.new("options :name should provid an extension")
+        end
+      end
+      file_path_with_extension
     end
 
     def get_value_of(string_or_proc)
