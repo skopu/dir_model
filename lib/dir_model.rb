@@ -6,9 +6,6 @@ require 'active_support/concern'
 
 require 'dir_model/utils'
 
-require 'dir_model/core_ext/dir'
-require 'dir_model/core_ext/zip_dir/zipper'
-
 require 'dir_model/model'
 require 'dir_model/model/files'
 
