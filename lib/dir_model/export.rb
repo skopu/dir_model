@@ -35,7 +35,7 @@ module DirModel
 
         mkdir { File.join(@root_path, dir_path) }
 
-        file_path += ".#{get_extension(file_name, options[:extensions])}"
+        file_path += ".#{get_extension(file_name, options)}"
 
         File.open(File.join(@root_path, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
       end
@@ -48,13 +48,11 @@ module DirModel
       instance_exec(&string_or_proc)
     end
 
-    def get_extension(file, extensions)
-      extension = FastImage.type(self.public_send(file))
-      if extensions.include?(extension) or
-        extensions == ['*']
-        extension
+    def get_extension(file, options)
+      if options[:type] == :image
+        FastImage.type(self.public_send(file))
       else
-        raise StandardError.new("Bad extension #{extension}, should be one of [#{extensions.join(', ')}]")
+        options[:extension]
       end
     end
 

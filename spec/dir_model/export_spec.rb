@@ -25,19 +25,37 @@ describe DirModel::Export do
     }.from(true).to(false)
   end
 
-  context "should'nt accept bad extensions" do
-    let(:source_model) { models.first }
+  context 'with image' do
+    let(:klass) do
+      Class.new do
+        include DirModel::Model
+        include DirModel::Export
 
-    subject { ImageExportDir.new(source_model, {}).path }
-
-    before do
-      expect(ImageExportDir).to receive(:options).with(:image) {
-        ImageDir.files[:image].merge({extensions: [:gif]})
-      }
+        def image
+          File.open('spec/fixtures/image.png')
+        end
+      end
     end
 
-    it 'should raise and error' do
-      expect { subject }.to raise_error('Bad extension png, should be one of [gif]')
+    it 'should be guess extension' do
+      expect(instance.send(:get_extension, :image, { type: :image })).to eql(:png)
+    end
+  end
+
+  context 'with document' do
+    let(:klass) do
+      Class.new do
+        include DirModel::Model
+        include DirModel::Export
+
+        def image
+          File.open('spec/fixtures/file.json')
+        end
+      end
+    end
+
+    it 'should use extension provided' do
+      expect(instance.send(:get_extension, :image, { type: :document, extension: :json })).to eql(:json)
     end
   end
 
