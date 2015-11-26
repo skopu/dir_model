@@ -24,39 +24,4 @@ describe DirModel::Export do
       instance.send(:generated?)
     }.from(true).to(false)
   end
-
-  context 'with image' do
-    let(:klass) do
-      Class.new do
-        include DirModel::Model
-        include DirModel::Export
-
-        def image
-          File.open('spec/fixtures/image.png')
-        end
-      end
-    end
-
-    it 'should be guess extension' do
-      expect(instance.send(:get_extension, :image, { type: :image })).to eql(:png)
-    end
-  end
-
-  context 'with document' do
-    let(:klass) do
-      Class.new do
-        include DirModel::Model
-        include DirModel::Export
-
-        def image
-          File.open('spec/fixtures/file.json')
-        end
-      end
-    end
-
-    it 'should use extension provided' do
-      expect(instance.send(:get_extension, :image, { type: :document, extension: :json })).to eql(:json)
-    end
-  end
-
 end

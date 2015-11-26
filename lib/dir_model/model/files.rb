@@ -29,24 +29,7 @@ module DirModel
         protected
 
         def file(file_name, options={})
-          check_attributes!(options)
-          merge_files(file_name.to_sym => with_default_extensions(options))
-        end
-
-        private
-
-        def check_attributes!(options)
-          options[:type] ||= :image
-          if options[:type] != :image and options[:extension].blank?
-            raise StandardError.new(
-              "Expected extension should be define with 'type: :#{options[:type]}', like 'extension: :json'"
-            )
-          end
-        end
-
-        def with_default_extensions(options)
-          options[:extensions] ||= ['*']
-          options
+          merge_files(file_name.to_sym => options)
         end
 
       end

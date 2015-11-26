@@ -1,5 +1,3 @@
-require 'fastimage'
-
 module DirModel
   module Export
 
@@ -35,8 +33,6 @@ module DirModel
 
         mkdir { File.join(@root_path, dir_path) }
 
-        file_path += ".#{get_extension(file_name, options)}"
-
         File.open(File.join(@root_path, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
       end
     ensure
@@ -46,14 +42,6 @@ module DirModel
     def get_value_of(string_or_proc)
       return string_or_proc if string_or_proc.is_a?(String)
       instance_exec(&string_or_proc)
-    end
-
-    def get_extension(file, options)
-      if options[:type] == :image
-        FastImage.type(self.public_send(file))
-      else
-        options[:extension]
-      end
     end
 
     def cleanup

@@ -20,5 +20,4 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activesupport',       '~> 4.2'
   spec.add_dependency 'inherited_class_var', '~> 0.1'
-  spec.add_dependency 'fastimage',           '~> 1.8'
 end

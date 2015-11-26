@@ -68,15 +68,7 @@ class ImageDir
 end
 ```
 
-`path` and `name` can take Proc or String if doesn't have any interpolation. Isn't necessary to precise extension it be discover automatically for image but if you trying to export json you have to define these extra options
-
-```ruby
-class ImageDir
-  include DirModel::Model
-
-  file :document, path: 'root_path', name: 'file.json', type: :document, extension: :json
-end
-```
+`path` and `name` can take Proc or String if doesn't have any interpolation.
 
 ```ruby
 class ImageExportDir < ImageDir
