@@ -8,17 +8,18 @@ module DirModel
       @source_path, @context = path, OpenStruct.new(options[:context])
       @index, @previous = options[:index], options[:previous].try(:dup)
       @load_state = :ghost
+      @file_infos = {}
     end
 
     def matches
       load
-      @match
+      file_infos[:options][:match]
     end
 
     def image
       File.open(source_path)
     end
-    
+
     def skip?
       load
       !@_match
@@ -40,15 +41,20 @@ module DirModel
 
     private
 
-    attr_reader :load_state
+    attr_reader :load_state, :file_infos
 
     def match?
       return if load_state == :loaded
 
       @_match ||= begin
         loader do
-          self.class.files.each do |file, attributes|
-            return true if (@match = (source_path||'').match(attributes[:regex].call))
+          self.class.file_names.each do |file_name|
+            options = self.class.options(file_name)
+
+            if match = (source_path||'').match(options[:regex].call)
+              @file_infos = { file: file_name, options: options.merge(match: match) }
+              return true
+            end
           end
           false
         end

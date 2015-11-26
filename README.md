@@ -64,13 +64,19 @@ You can have access at the file through
 class ImageDir
   include DirModel::Model
 
-  file :image, path: -> { "#{dir}/#{sub_dir}" }, name: -> { image_name }, extensions: [:png]
+  file :image, path: -> { "#{dir}/#{sub_dir}" }, name: -> { image_name }
 end
 ```
 
-`path` and `name` can take Proc or String if interpolation isn't needed. Isn't necessary to precise extension it be discover automatically
+`path` and `name` can take Proc or String if doesn't have any interpolation. Isn't necessary to precise extension it be discover automatically for image but if you trying to export json you have to define these extra options
 
-`extensions` is optional, by default we use `extensions: ['*']` to authorize all extensions
+```ruby
+class ImageDir
+  include DirModel::Model
+
+  file :document, path: 'root_path', name: 'file.json', type: :document, extension: :json
+end
+```
 
 ```ruby
 class ImageExportDir < ImageDir
