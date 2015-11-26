@@ -45,22 +45,21 @@ module DirModel
 
     def match?
       return if load_state == :loaded
-
-      @_match ||= begin
-        loader do
-          self.class.file_names.each do |file_name|
-            options = self.class.options(file_name)
-
-            if match = (source_path||'').match(options[:regex].call)
-              @file_infos = { file: file_name, options: options.merge(match: match) }
-              return true
-            end
-          end
-          false
-        end
-      end
+      @_match = loader { find_match }
     end
     alias_method :load, :match?
+
+    def find_match
+      self.class.file_names.each do |file_name|
+        options = self.class.options(file_name)
+
+        if match = (source_path||'').match(options[:regex].call)
+          @file_infos = { file: file_name, options: options.merge(match: match) }
+          return true
+        end
+      end
+      false
+    end
 
     def loader
       @load_state = :loading
