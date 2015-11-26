@@ -3,7 +3,7 @@ require 'spec_helper'
 describe DirModel::Export do
   let(:klass) do
     Class.new do
-      include DirModel
+      include DirModel::Model
       include DirModel::Export
     end
   end
@@ -23,5 +23,21 @@ describe DirModel::Export do
     }.from(true).to(false) & change {
       instance.send(:generated?)
     }.from(true).to(false)
+  end
+
+  context 'with image' do
+    let(:klass) do
+      Class.new do
+        include DirModel::Model
+        include DirModel::Export
+
+        def image
+          File.open('spec/fixtures/image.png')
+        end
+      end
+    end
+    it 'should be guess extension' do
+      expect(instance.send(:ensure_extension, 'path/file', :image)).to eql('path/file.png')
+    end
   end
 end

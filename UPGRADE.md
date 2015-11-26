@@ -1,5 +1,10 @@
 # Upgrading
 
+* Model is now a module you have to change include from `include DirModel` to `include DirModel::Model`
+
+# Upgrading from 0.2.0 to 0.3.0
+
+
 # Upgrading from 0.1.0 to 0.2.0
 
 You have to change
