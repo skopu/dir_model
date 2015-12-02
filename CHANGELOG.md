@@ -1,3 +1,7 @@
+### VERSION 0.3.1
+
+* Technical changes, Simplication of Path, use Array skill to give previous, current and next Path instead of using Enumerator
+
 ### VERSION 0.3.0
 
 * Add Import feature
