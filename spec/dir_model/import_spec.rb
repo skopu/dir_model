@@ -21,6 +21,7 @@ describe DirModel::Import do
 
       it 'should return false' do
         expect(subject).to eql(false)
+        expect(instance.instance_variable_get(:@_match)).to eql(false)
       end
     end
 
@@ -29,6 +30,7 @@ describe DirModel::Import do
 
       it 'should return true' do
         expect(subject).to eql(true)
+        expect(instance.instance_variable_get(:@_match)).to eql(true)
       end
 
       it 'should match information' do
