@@ -28,6 +28,10 @@ module DirModel
         self
       end
 
+      def files
+        Dir["#{@dir_path}/**/*"].select { |f| File.file?(f) }
+      end
+
     end
   end
 end

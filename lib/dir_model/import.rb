@@ -16,7 +16,7 @@ module DirModel
       file_infos[:options][:match]
     end
 
-    def image
+    def document
       File.open(source_path)
     end
 
