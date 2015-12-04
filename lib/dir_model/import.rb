@@ -19,6 +19,7 @@ module DirModel
     def document
       File.open(source_path)
     end
+    alias_method :image, :document
 
     def skip?
       load
