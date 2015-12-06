@@ -91,6 +91,10 @@ class ImageExportDir < ImageDir
   def image
     source_model.zone
   end
+
+  def image_extension
+    '.png'
+  end
 end
 
 fixture_models = [

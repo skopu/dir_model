@@ -45,7 +45,10 @@ module DirModel
 
     def ensure_extension(file_path, file_method_name)
       file_path_with_extension = file_path
-      if File.extname(file_path).blank?
+
+      if self.respond_to?("#{file_method_name}_extension")
+        file_path_with_extension = file_path + '.' + self.public_send("#{file_method_name}_extension")
+      elsif File.extname(file_path).blank?
         if ext = FastImage.type(self.public_send(file_method_name))
           file_path_with_extension = file_path + '.' + ext.to_s
         else
