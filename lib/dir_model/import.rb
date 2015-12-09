@@ -16,11 +16,6 @@ module DirModel
       file_infos[:options][:match]
     end
 
-    def document
-      File.open(source_path)
-    end
-    alias_method :image, :document
-
     def skip?
       load
       !@_match
