@@ -1,19 +1,12 @@
 require 'spec_helper'
 
 describe DirModel::Export do
-  let(:klass) do
-    Class.new do
-      include DirModel::Model
-      include DirModel::Export
-    end
-  end
-  let(:context) {{}}
+  let(:klass)        { ImageExportDir }
+  let(:context)      {{}}
   let(:source_model) { nil }
-  let(:instance) { klass.new(source_model, context) }
+  let(:instance)     { klass.new(source_model, context) }
 
-  before do
-    instance.instance_variable_set(:@generated, true)
-  end
+  before { instance.instance_variable_set(:@generated, true) }
 
   it '#cleanup' do
     expect { instance.send(:cleanup) }.to change {
@@ -26,18 +19,8 @@ describe DirModel::Export do
   end
 
   context 'with image' do
-    let(:klass) do
-      Class.new do
-        include DirModel::Model
-        include DirModel::Export
-
-        def image
-          File.open('spec/fixtures/image.png')
-        end
-      end
-    end
     it 'should be guess extension' do
-      expect(instance.send(:ensure_extension, 'path/file', :image)).to eql('path/file.png')
+      expect(instance.send(:ensure_extension, 'path/file.png', :image)).to eql('path/file.png')
     end
   end
 end

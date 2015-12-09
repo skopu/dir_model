@@ -7,6 +7,7 @@ module DirModel
         self.file_names.each do |*args|
           define_skip_method(*args)
           define_file_method(*args)
+          define_extension_method(*args)
         end
       end
 
@@ -36,12 +37,24 @@ module DirModel
           end
         end
 
+        # Safe to override
+        #
+        # Define default extension method for defined file
+        # @param file_name [Symbol] the file: name
+        def define_extension_method(file_name)
+          define_method("#{file_name}_extension") do
+            return unless self.public_send(file_name).respond_to?(:extension)
+            self.public_send(file_name).extension # Carrierwave Uploader
+          end
+        end
+
         protected
 
         def file(file_name, options={})
           super
           define_skip_method(file_name)
           define_file_method(file_name)
+          define_extension_method(file_name)
         end
       end
 

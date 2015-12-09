@@ -51,18 +51,19 @@ module DirModel
     end
 
     def ensure_extension(file_path, file_method_name)
+      return file_path if File.extname(file_path).present? # Return if extension was provided in name: attribute, i.e name: 'image.png'
+
       file_path_with_extension = file_path
 
-      if self.respond_to?("#{file_method_name}_extension")
-        file_path_with_extension = file_path + '.' + self.public_send("#{file_method_name}_extension")
-      elsif File.extname(file_path).blank?
-        if ext = FastImage.type(self.public_send(file_method_name))
-          file_path_with_extension = file_path + '.' + ext.to_s
-        else
-          raise StandardError.new("options :name should provid an extension")
-        end
+      # Looking into <file_name>_extension method
+      ext = self.public_send("#{file_method_name}_extension")
+      ext ||= FastImage.type(self.public_send(file_method_name))
+      unless ext
+        # You have to provide an extension i.e name: 'file.json
+        raise StandardError.new("options :name should provide an extension")
       end
-      file_path_with_extension
+
+      file_path_with_extension = file_path + '.' + ext.to_s
     end
 
     def get_value_of(string_or_proc)

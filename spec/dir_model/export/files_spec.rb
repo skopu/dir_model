@@ -10,10 +10,12 @@ describe DirModel::Export::Files do
     expect(instance.image_skip?).to eql(false)
   end
 
-  shared_examples 'call source_model file method' do
+  shared_examples 'call source_model file and file extension method' do |extension|
     it 'should have :my_image method' do
       expect(instance).to be_respond_to(:my_image)
-      expect(instance.my_image).to eql('file content')
+      expect(instance.my_image.read).to eql('file content')
+      expect(instance).to be_respond_to(:my_image_extension)
+      expect(instance.my_image_extension).to eql(extension)
     end
   end
 
@@ -21,13 +23,13 @@ describe DirModel::Export::Files do
     let(:klass)  { Class.new(ImageExportDir) { file :my_image } }
 
     context 'regular file method' do
-      let(:source_model) { OpenStruct.new({my_image: 'file content'}) }
-      it_behaves_like 'call source_model file method'
+      let(:source_model) { OpenStruct.new({my_image: double(:file, read: 'file content')}) }
+      it_behaves_like 'call source_model file and file extension method', nil
     end
 
     context 'carrierwave uploader file method' do
-      let(:source_model) { OpenStruct.new({my_image: double(file: 'file content')}) }
-      it_behaves_like 'call source_model file method'
+      let(:source_model) { OpenStruct.new({my_image: double(:file, file: double(extension: :png, read: 'file content'))}) }
+      it_behaves_like 'call source_model file and file extension method', :png
     end
   end
 end
