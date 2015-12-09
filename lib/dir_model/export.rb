@@ -2,6 +2,11 @@ require 'fastimage'
 
 module DirModel
   module Export
+    extend ActiveSupport::Concern
+
+    included do
+      include Files
+    end
 
     attr_reader :source_model, :context
 
@@ -29,6 +34,8 @@ module DirModel
 
       self.class.file_names.each do |file_name|
         options = self.class.options(file_name)
+
+        next if self.send("#{file_name}_skip?")
 
         dir_path  = get_value_of(options[:path])
         file_path = File.join(dir_path, get_value_of(options[:name]))
