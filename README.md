@@ -115,6 +115,47 @@ end
 exporter.dir_path # => path of generated dir .../Sectors
 ```
 
+an skip? method based on the name of file :image is create, this method is named `image_skip?`
+
+default implementation
+```
+def image_skip?
+  image.present?
+end
+```
+NOTE Safe to override on your Exporter
+
+In fact this is equivalent to
+
+```
+def image_skip?
+  source_model.zone.present?
+end
+```
+
+by default Exporter provide a link between `source_model` and your `file` like
+```
+def image
+  source_model.image
+end
+```
+NOTE Safe to override on your Exporter
+
+In fact this play well with carrierwave and provide for you automatically
+```
+def image
+  source_model.image.file
+end
+```
+
+as well Exporter provide extension method only for carrierwave uploader
+```
+def image_extension
+  source_model.image.file.extension
+end
+```
+Otherwise return nil, safe to override on your Exporter
+
 ## zip_dir
 Use [`zip_dir`](https://github.com/FinalCAD/zip_dir) to zip DirModel::Export instances:
 ```ruby

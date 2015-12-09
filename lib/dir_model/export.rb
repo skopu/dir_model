@@ -2,6 +2,11 @@ require 'fastimage'
 
 module DirModel
   module Export
+    extend ActiveSupport::Concern
+
+    included do
+      include Files
+    end
 
     attr_reader :source_model, :context
 
@@ -30,12 +35,14 @@ module DirModel
       self.class.file_names.each do |file_name|
         options = self.class.options(file_name)
 
+        next if self.send("#{file_name}_skip?")
+
         dir_path  = get_value_of(options[:path])
         file_path = File.join(dir_path, get_value_of(options[:name]))
 
         mkdir { File.join(@root_path, dir_path) }
 
-       file_path = ensure_extension(file_path, file_name)
+        file_path = ensure_extension(file_path, file_name)
 
         File.open(File.join(@root_path, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
       end
@@ -44,18 +51,19 @@ module DirModel
     end
 
     def ensure_extension(file_path, file_method_name)
+      return file_path if File.extname(file_path).present? # Return if extension was provided in name: attribute, i.e name: 'image.png'
+
       file_path_with_extension = file_path
 
-      if self.respond_to?("#{file_method_name}_extension")
-        file_path_with_extension = file_path + '.' + self.public_send("#{file_method_name}_extension")
-      elsif File.extname(file_path).blank?
-        if ext = FastImage.type(self.public_send(file_method_name))
-          file_path_with_extension = file_path + '.' + ext.to_s
-        else
-          raise StandardError.new("options :name should provid an extension")
-        end
+      # Looking into <file_name>_extension method
+      ext = self.public_send("#{file_method_name}_extension")
+      ext ||= FastImage.type(self.public_send(file_method_name))
+      unless ext
+        # You have to provide an extension i.e name: 'file.json
+        raise StandardError.new("options :name should provide an extension")
       end
-      file_path_with_extension
+
+      file_path_with_extension = file_path + '.' + ext.to_s
     end
 
     def get_value_of(string_or_proc)
