@@ -18,7 +18,7 @@ module DirModel
         # @param file_name [Symbol] the file: name
         def define_skip_method(file_name)
           define_method("#{file_name}_skip?") do
-            false
+            !file_name.try(:present?)
           end
         end
 
