@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe DirModel::Export::Files do
-  let(:source_model) { nil }
+  let(:source_model) { double(zone: double(present?: true)) }
   let(:klass)        { ImageExportDir }
   let(:instance)     { klass.new(source_model, {}) }
 
