@@ -4,7 +4,10 @@ module DirModel
       extend ActiveSupport::Concern
 
       included do
-        self.file_names.each { |*args| define_skip_method(*args) }
+        self.file_names.each do |*args|
+          define_skip_method(*args)
+          define_file_method(*args)
+        end
       end
 
       module ClassMethods
@@ -19,11 +22,26 @@ module DirModel
           end
         end
 
+        # Safe to override
+        #
+        # Define default file method for defined file
+        # @param file_name [Symbol] the file: name
+        def define_file_method(file_name)
+          define_method(file_name) do
+            file = file_or_uploader = source_model.public_send(file_name)
+            if file_or_uploader.respond_to?(:file) # Carrierwave Uploader
+              file = file_or_uploader.file
+            end
+            file
+          end
+        end
+
         protected
 
         def file(file_name, options={})
           super
           define_skip_method(file_name)
+          define_file_method(file_name)
         end
       end
 

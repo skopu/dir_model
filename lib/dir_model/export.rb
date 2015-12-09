@@ -42,7 +42,7 @@ module DirModel
 
         mkdir { File.join(@root_path, dir_path) }
 
-       file_path = ensure_extension(file_path, file_name)
+        file_path = ensure_extension(file_path, file_name)
 
         File.open(File.join(@root_path, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
       end
