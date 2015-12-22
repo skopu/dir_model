@@ -6,8 +6,8 @@ module DirModel
       attr_reader :index
       attr_reader :current_path
 
-      def initialize(path)
-        @path, @index = path, -1
+      def initialize(dir_path)
+        @path, @index = dir_path, -1
         reset!
       end
 
