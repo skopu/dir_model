@@ -19,6 +19,7 @@ module DirModel
           define_method("#{file_name}_skip?") do
             !self.public_send(file_name).try(:present?)
           end
+          # alias_method "#{file_name}_skip?".to_sym, :skip?
         end
 
         # Safe to override

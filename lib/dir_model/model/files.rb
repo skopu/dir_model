@@ -29,8 +29,8 @@ module DirModel
         protected
 
         def file(file_name, options={})
-          raise ArgumentError.new("You can define only on file: but you can add relation, see README") if files.keys.size > 1
           merge_files(file_name.to_sym => options)
+          raise ArgumentError.new("You cannot define more of one file: but you can add relations, see README") if files.keys.size > 1
         end
 
       end
