@@ -25,7 +25,7 @@ end
 for a DirModel
 
 ```
-class ImageDir
+class BasicDirModel
   include DirModel
 
   file :image, path: -> { "#{dir}/#{sub_dir}" }, name: -> { "#{image_name}.png" }

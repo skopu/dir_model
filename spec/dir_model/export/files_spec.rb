@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe DirModel::Export::Files do
   let(:source_model) { double(zone: double(present?: true)) }
-  let(:klass)        { ImageExportDir }
+  let(:klass)        { BasicExportDirModel }
   let(:instance)     { klass.new(source_model, {}) }
 
   it 'should have image_skip? method' do
@@ -20,7 +20,7 @@ describe DirModel::Export::Files do
   end
 
   describe '.define_file_method' do
-    let(:klass)  { Class.new(ImageExportDir) { file :my_image } }
+    let(:klass)  { Class.new(BasicExportDirModel) { file :my_image } }
 
     context 'regular file method' do
       let(:source_model) { OpenStruct.new({my_image: double(:file, read: 'file content')}) }

@@ -12,7 +12,7 @@ describe DirModel::Import do
   let(:instance)    { klass.new(source_path, context) }
 
   describe '#match?' do
-    let(:klass) { ImageImportDir }
+    let(:klass) { BasicImportDirModel }
 
     subject { instance.send :match? }
 

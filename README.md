@@ -23,7 +23,7 @@ Or install it yourself as:
 ### Import
 
 ```ruby
-class ImageDir
+class BasicDirModel
   include DirModel::Model
 
   file :image, regex: -> { /Zones\/Sector_(?<sector_id>.*)\/Zone_(?<zone_id>.*)\.(?<extension>png|jpg)/i }
@@ -35,7 +35,7 @@ named matches are available under `matches[:sector_id]` or directly when you cal
 An implementation possible of Import
 
 ```ruby
-class ImageImportDir < ImageDir
+class BasicImportDirModel < BasicDirModel
   include DirModel::Import
 
   def assign!
@@ -56,12 +56,12 @@ end
 
 You can have access at the file through
 
-`ImageImportDir.new(source_path, project_id: 42).image`
+`BasicImportDirModel.new(source_path, project_id: 42).image`
 
 ### Export
 
 ```ruby
-class ImageDir
+class BasicDirModel
   include DirModel::Model
 
   file :image, path: -> { "#{dir}/#{sub_dir}" }, name: -> { image_name }
@@ -73,7 +73,7 @@ end
 If you don't know the extension of your image it will be automatically discover, but this works only for image so if you send, for instance, a json file you have to explicitly provide extension on the `:name` options
 
 ```ruby
-class ImageExportDir < ImageDir
+class BasicExportDirModel < BasicDirModel
   include DirModel::Export
 
   def dir
@@ -106,7 +106,7 @@ fixture_models = [
   })
 ]
 
-exporter = DirModel::Export::AggregateDir.new(ImageExportDir)
+exporter = DirModel::Export::AggregateDir.new(BasicExportDirModel)
 
 exporter.generate do |dir|
   models.each { |model| dir << model }

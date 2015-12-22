@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe DirModel::Export::AggregateDir do
   let(:file_contents)    { File.new('spec/fixtures/image.png').read }
-  let(:export_dir_class) { ImageExportDir }
-  let(:instance)         { DirModel::Export::AggregateDir.new(ImageExportDir) }
+  let(:export_dir_class) { BasicExportDirModel }
+  let(:instance)         { DirModel::Export::AggregateDir.new(BasicExportDirModel) }
   let(:file_paths) do
     [
       'Sectors/sector_name/zone_name.png',

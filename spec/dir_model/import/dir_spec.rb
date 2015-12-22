@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe DirModel::Import::Dir do
   let(:source_path) { 'spec/fixtures/unzip_dir' }
-  let(:model_class) { ImageImportDir }
+  let(:model_class) { BasicImportDirModel }
   let(:instance)    { described_class.new source_path, model_class, 'some_context' => true }
   let(:paths)  do
     [ 'spec/fixtures/unzip_dir/sectors',
@@ -61,11 +61,11 @@ describe DirModel::Import::Dir do
 
     context 'with skips on even paths' do
       let(:model_class) do
-        Class.new(ImageImportDir) do
+        Class.new(BasicImportDirModel) do
           def skip?
             ((index||0) % 2 == 1)
           end
-          def self.name; 'ImageImportDirWithSkip' end
+          def self.name; 'BasicImportDirModelWithSkip' end
         end
       end
 
