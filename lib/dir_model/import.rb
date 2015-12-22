@@ -46,13 +46,12 @@ module DirModel
     alias_method :load, :match?
 
     def find_match
-      self.class.file_names.each do |file_name|
-        options = self.class.options(file_name)
+      file_name = self.class.file_name
+      options   = self.class.options(file_name)
 
-        if match = (source_path||'').match(options[:regex].call)
-          @file_infos = { file: file_name, options: options.merge(match: match) }
-          return true
-        end
+      if match = (source_path||'').match(options[:regex].call)
+        @file_infos = { file: file_name, options: options.merge(match: match) }
+        return true
       end
       false
     end

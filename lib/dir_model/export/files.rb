@@ -4,11 +4,9 @@ module DirModel
       extend ActiveSupport::Concern
 
       included do
-        self.file_names.each do |*args|
-          define_skip_method(*args)
-          define_file_method(*args)
-          define_extension_method(*args)
-        end
+        define_skip_method(self.file_name)
+        define_file_method(self.file_name)
+        define_extension_method(self.file_name)
       end
 
       module ClassMethods

@@ -10,8 +10,8 @@ module DirModel
 
       module ClassMethods
         # @return [Array<Symbol>] file names for the row model
-        def file_names
-          files.keys
+        def file_name
+          files.keys.first
         end
 
         # @param [Symbol] file_name name of file to find option
@@ -23,12 +23,13 @@ module DirModel
         # @param [Symbol] file_name name of file to find index
         # @return [Integer] index of the file_name
         def index(file_name)
-          file_names.index file_name
+          0
         end
 
         protected
 
         def file(file_name, options={})
+          raise ArgumentError.new("You can define only on file: but you can add relation, see README") if files.keys.size > 1
           merge_files(file_name.to_sym => options)
         end
 
