@@ -6,9 +6,9 @@ module DirModel
 
     def initialize(path, options={})
       @source_path, @context = path, OpenStruct.new(options[:context])
-      @index, @previous = options[:index], options[:previous].try(:dup)
-      @load_state = :ghost
-      @file_infos = {}
+      @index, @previous      = options[:index], options[:previous].try(:dup)
+      @load_state            = :ghost
+      @file_infos            = {}
     end
 
     def matches
@@ -47,7 +47,7 @@ module DirModel
 
     def find_match
       file_name = self.class.file_name
-      options   = self.class.options(file_name)
+      options   = self.class.options
 
       if match = (source_path||'').match(options[:regex].call)
         @file_infos = { file: file_name, options: options.merge(match: match) }

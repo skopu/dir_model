@@ -16,7 +16,7 @@ module DirModel
 
         # @param [Symbol] file_name name of file to find option
         # @return [Hash] options for the file_name
-        def options(file_name)
+        def options
           files[file_name]
         end
 

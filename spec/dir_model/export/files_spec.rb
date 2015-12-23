@@ -20,7 +20,7 @@ describe DirModel::Export::Files do
   end
 
   describe '.define_file_method' do
-    let(:klass)  { Class.new(BasicExportDirModel) { file :image } }
+    let(:klass)  { Class.new(BasicExportDirModel) { file :image } } # NOTE Understand why test fail without this line
 
     context 'regular file method' do
       let(:source_model) { OpenStruct.new({image: double(:file, read: 'file content')}) }

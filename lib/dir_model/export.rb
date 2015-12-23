@@ -33,7 +33,7 @@ module DirModel
       cleanup if generated?
 
       file_name = self.class.file_name
-      options = self.class.options(file_name)
+      options   = self.class.options
 
       return if self.send("#{file_name}_skip?")
 
@@ -59,7 +59,7 @@ module DirModel
       ext ||= FastImage.type(self.public_send(file_method_name))
       unless ext
         # You have to provide an extension i.e name: 'file.json
-        raise StandardError.new("options :name should provide an extension")
+        raise StandardError.new("extension guessing failed, please provide explicit extension in :name option")
       end
 
       file_path_with_extension = file_path + '.' + ext.to_s
