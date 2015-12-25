@@ -20,8 +20,8 @@ describe DirModel::Import do
       let(:source_path) { 'spec/fixtures/unzip_dir/sectors' }
 
       it 'should return false' do
-        expect(subject).to eql(false)
-        expect(instance.instance_variable_get(:@_match)).to eql(false)
+        expect(subject).to be_falsey
+        expect(instance.instance_variable_get(:@_match)).to be_falsey
       end
     end
 
@@ -29,14 +29,15 @@ describe DirModel::Import do
       let(:source_path) { 'zones/sector_1/zone_1.png' }
 
       it 'should return true' do
-        expect(subject).to eql(true)
-        expect(instance.instance_variable_get(:@_match)).to eql(true)
+        expect(subject).to be_truthy
+        expect(instance.instance_variable_get(:@_match)).to be_truthy 
       end
 
       it 'should match information' do
-        expect(instance.matches[:sector_id]).to eql('1')
-        expect(instance.matches[:zone_id]).to   eql('1')
-        expect(instance.matches[:extension]).to eql('png')
+        subject
+        expect(instance.instance_variable_get(:@_match)[:sector_id]).to eql('1')
+        expect(instance.instance_variable_get(:@_match)[:zone_id]).to   eql('1')
+        expect(instance.instance_variable_get(:@_match)[:extension]).to eql('png')
       end
 
       it 'match should be accessible through methods' do

@@ -11,11 +11,6 @@ module DirModel
       @file_infos            = {}
     end
 
-    def matches
-      load
-      file_infos[:options][:match]
-    end
-
     def skip?
       load
       !@_match
@@ -23,8 +18,8 @@ module DirModel
 
     def method_missing(name, *args, &block)
       load
-      matches[name]
-    rescue IndexError
+      @_match[name]
+    rescue
       super
     end
 
@@ -41,27 +36,12 @@ module DirModel
 
     def match?
       return if load_state == :loaded
-      @_match = loader { find_match }
+      @_match = find_match.tap { @load_state = :loaded }
     end
     alias_method :load, :match?
 
     def find_match
-      file_name = self.class.file_name
-      options   = self.class.options
-
-      if match = (source_path||'').match(options[:regex].call)
-        @file_infos = { file: file_name, options: options.merge(match: match) }
-        return true
-      end
-      false
+      @_match = (source_path||'').match(self.class.options[:regex].call)
     end
-
-    def loader
-      @load_state = :loading
-      result = yield
-      @load_state = :loaded
-      result
-    end
-
   end
 end
