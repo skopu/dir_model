@@ -15,7 +15,7 @@ describe DirModel::Import::Path do
     subject { instance.size }
 
     it 'should return number of paths' do
-      expect(subject).to eql(5)
+      expect(subject).to eql(6)
     end
   end
 
@@ -85,6 +85,7 @@ describe DirModel::Import::Path do
       expect(instance.read_path).to eql('spec/fixtures/unzip_dir/sectors/sector_1.png')
       expect(instance.read_path).to eql('spec/fixtures/unzip_dir/zones')
       expect(instance.read_path).to eql('spec/fixtures/unzip_dir/zones/sector_1')
+      expect(instance.read_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.json')
       expect(instance.read_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.png')
     end
   end

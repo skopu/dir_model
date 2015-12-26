@@ -9,7 +9,9 @@ describe DirModel::Import::Dir do
       'spec/fixtures/unzip_dir/sectors/sector_1.png',
       'spec/fixtures/unzip_dir/zones',
       'spec/fixtures/unzip_dir/zones/sector_1',
-      'spec/fixtures/unzip_dir/zones/sector_1/zone_1.png' ]
+      'spec/fixtures/unzip_dir/zones/sector_1/zone_1.json',
+      'spec/fixtures/unzip_dir/zones/sector_1/zone_1.png',
+ ]
   end
 
   describe '#context' do
@@ -76,6 +78,24 @@ describe DirModel::Import::Dir do
 
         expect { subject.next }.to raise_error(StopIteration)
       end
+    end
+  end
+  
+  context 'with relation' do
+    let(:model_class) { ParentImportDirModel }
+    let(:instance)    { described_class.new source_path, model_class }
+
+    it 'should fill the relation' do
+      found = false
+      while dir_model = instance.next do
+        if dir_model.source_path == 'spec/fixtures/unzip_dir/zones/sector_1/zone_1.png'
+          expect(dir_model.dependency).to be_present
+          expect(dir_model.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.png')
+          expect(dir_model.dependency.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.json')
+          found = true
+        end
+      end
+      expect(found).to eql(true)
     end
   end
 

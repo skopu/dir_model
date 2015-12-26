@@ -44,6 +44,14 @@ module DirModel
         set_end unless current_path
         current_path
       end
+      
+      def set_position(index)
+        @index = index
+      end
+      
+      def rewind
+        set_position(-1)
+      end
 
       protected
 
