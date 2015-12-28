@@ -10,6 +10,10 @@ module DirModel
       def child?
         !!parent
       end
+      
+      def has_relations?
+        has_one?
+      end
 
       # Appends model to the parent and returns it
       #
@@ -27,7 +31,6 @@ module DirModel
           nil
         end
       end
-      alias_method :<<, :append_dir_model
 
       def has_one?
         false

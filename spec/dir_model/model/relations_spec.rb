@@ -6,18 +6,21 @@ describe DirModel::Model::Relations do
     let(:instance) { BasicDirModel.new(nil, options) }
 
     describe '#child?' do
-      subject { instance.child? }
-
       specify do
-        expect(subject).to eql(false)
+        expect(instance).to_not be_child
         expect(instance).to_not be_has_one
+        expect(instance).to_not be_has_relations
       end
 
       context 'with a parent' do
         let(:parent_instance) { BasicDirModel.new }
         let(:options)         { { parent: parent_instance } }
 
-        specify { expect(subject).to eql true }
+        specify do
+          expect(instance).to be_child
+          expect(instance).to_not be_has_one
+          expect(instance).to_not be_has_relations
+        end
       end
     end
   end
@@ -29,12 +32,11 @@ describe DirModel::Model::Relations do
     let(:parent_instance) { ParentImportDirModel.new('zones/sector_1/zone_1.png') }
     
     describe '#has_one' do
-      it '' do
+      it 'should have accessor defined' do
         expect(parent_instance).to be_respond_to(:dependency)
         expect(parent_instance).to be_respond_to(:dependency=)
         expect(parent_instance).to be_respond_to(:has_one?)
         expect(parent_instance).to be_has_one
-        
       end
     end
 

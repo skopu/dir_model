@@ -29,7 +29,7 @@ module DirModel
         path.read_path
         dir_model = new(path.current_path, index: path.index, context: context, previous: previous)
 
-        if dir_model.has_one?
+        if dir_model.has_relations?
           current_position = path.index
           path.rewind
           loop do # loop until find related file (has_one relation)
