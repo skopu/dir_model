@@ -16,10 +16,9 @@ module DirModel
         # Define default skip method for a file
         # @param file_name [Symbol] the file: name
         def define_skip_method(file_name)
-          define_method("#{file_name}_skip?") do
+          define_method(:skip?) do
             !self.public_send(file_name).try(:present?)
           end
-          # alias_method "#{file_name}_skip?".to_sym, :skip?
         end
 
         # Safe to override

@@ -38,18 +38,10 @@ An implementation possible of Import
 class BasicImportDirModel < BasicDirModel
   include DirModel::Import
 
-  def assign!
-    model.send(method, image)
-  end
-
   protected
 
   def model
     Project.find(context[:project_id]).sectors.find(sector_id).zones.find(zone_id)
-  end
-
-  def method
-    :blueprint
   end
 end
 ```
@@ -57,6 +49,29 @@ end
 You can have access at the file through
 
 `BasicImportDirModel.new(source_path, project_id: 42).image`
+
+#### Relation
+
+A dir_model can have a relation like `has_one` basically is
+
+```ruby
+class ChildImportDirModel
+  include DirModel::Model
+  include DirModel::Import
+  file :metadata, regex: -> { /Zones\/Sector_(?<sector_id>.*)\/Zone_(?<zone_id>.*)\.(?<extension>json)/i }
+end
+```
+
+```ruby
+class ParentImportDirModel < BasicImportDirModel
+  has_one :dependency, ChildImportDirModel
+end
+```
+
+```ruby
+parent_instance.dependency # => ChildImportDirModel
+child.parent # => parent_instance
+```
 
 ### Export
 
@@ -119,7 +134,7 @@ an skip? method based on the name of file :image is create, this method is named
 
 default implementation
 ```
-def image_skip?
+def skip?
   image.present?
 end
 ```
@@ -128,7 +143,7 @@ NOTE Safe to override on your Exporter
 In fact this is equivalent to
 
 ```
-def image_skip?
+def skip?
   source_model.zone.present?
 end
 ```
@@ -155,15 +170,3 @@ def image_extension
 end
 ```
 Otherwise return nil, safe to override on your Exporter
-
-## zip_dir
-Use [`zip_dir`](https://github.com/FinalCAD/zip_dir) to zip DirModel::Export instances:
-```ruby
-# Zip
-zipper = ZipDir::Zipper.new
-zip_file = zipper.generate do |z|
-  z.add_and_cleanup_dir __dir_model_export__
-end
-```
-
-**Ensure that `require zip_dir` occurs before `dir_model` (for now)**

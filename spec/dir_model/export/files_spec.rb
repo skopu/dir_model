@@ -6,8 +6,8 @@ describe DirModel::Export::Files do
   let(:instance)     { klass.new(source_model, {}) }
 
   it 'should have image_skip? method' do
-    expect(instance).to be_respond_to(:image_skip?)
-    expect(instance.image_skip?).to eql(false)
+    expect(instance).to be_respond_to(:skip?)
+    expect(instance.skip?).to eql(false)
   end
 
   shared_examples 'call source_model file and file extension method' do |extension|

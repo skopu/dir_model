@@ -35,7 +35,7 @@ module DirModel
       file_name = self.class.file_name
       options   = self.class.options
 
-      return if self.send("#{file_name}_skip?")
+      return if self.send(:skip?)
 
       dir_path  = get_value_of(options[:path])
       file_path = File.join(dir_path, get_value_of(options[:name]))

@@ -1,8 +1,8 @@
 # Upgrading
 
-# Upgrading from 0.3.0 to 0.3.1
+# Upgrading from 0.4.0 to 0.5.0
 
-* Nothing todo
+* Ensure you have only on definition of `file:` by dir_model
 
 # Upgrading from 0.2.0 to 0.3.0
 
