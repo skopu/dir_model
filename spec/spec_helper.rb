@@ -4,10 +4,8 @@ require 'pry'
 
 require 'dir_model'
 
-require Dir.pwd + '/spec/fixtures/models/image_dir.rb'
-require Dir.pwd + '/spec/fixtures/models/image_export_dir.rb'
-require Dir.pwd + '/spec/fixtures/models/image_import_dir.rb'
-
+# Need to be loaded with order
+require Dir.pwd + '/spec/fixtures/models/basic_dir_models.rb'
 require Dir.pwd + '/spec/fixtures/models/models.rb'
 
 # Dir[Dir.pwd + '/spec/fixtures/**/*.rb'].each { |f| require f }

@@ -32,20 +32,19 @@ module DirModel
     def generate
       cleanup if generated?
 
-      self.class.file_names.each do |file_name|
-        options = self.class.options(file_name)
+      file_name = self.class.file_name
+      options   = self.class.options
 
-        next if self.send("#{file_name}_skip?")
+      return if self.send(:skip?)
 
-        dir_path  = get_value_of(options[:path])
-        file_path = File.join(dir_path, get_value_of(options[:name]))
+      dir_path  = get_value_of(options[:path])
+      file_path = File.join(dir_path, get_value_of(options[:name]))
 
-        mkdir { File.join(@root_path, dir_path) }
+      mkdir { File.join(@root_path, dir_path) }
 
-        file_path = ensure_extension(file_path, file_name)
+      file_path = ensure_extension(file_path, file_name)
 
-        File.open(File.join(@root_path, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
-      end
+      File.open(File.join(@root_path, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
     ensure
       @generated = true
     end
@@ -60,7 +59,7 @@ module DirModel
       ext ||= FastImage.type(self.public_send(file_method_name))
       unless ext
         # You have to provide an extension i.e name: 'file.json
-        raise StandardError.new("options :name should provide an extension")
+        raise StandardError.new("extension guessing failed, please provide explicit extension in :name option")
       end
 
       file_path_with_extension = file_path + '.' + ext.to_s

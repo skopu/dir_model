@@ -8,6 +8,7 @@ require 'dir_model/utils'
 
 require 'dir_model/model'
 require 'dir_model/model/files'
+require 'dir_model/model/relations'
 
 require 'dir_model/export/files'
 require 'dir_model/export'

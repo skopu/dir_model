@@ -5,15 +5,11 @@ module DirModel
     attr_reader :context, :source_path, :index, :previous
 
     def initialize(path, options={})
+      super # set parent
       @source_path, @context = path, OpenStruct.new(options[:context])
-      @index, @previous = options[:index], options[:previous].try(:dup)
-      @load_state = :ghost
-      @file_infos = {}
-    end
-
-    def matches
-      load
-      file_infos[:options][:match]
+      @index, @previous      = options[:index], options[:previous].try(:dup)
+      @load_state            = :ghost
+      @file_infos            = {}
     end
 
     def skip?
@@ -23,15 +19,27 @@ module DirModel
 
     def method_missing(name, *args, &block)
       load
-      matches[name]
-    rescue IndexError
+      @_match[name]
+    rescue
       super
     end
 
     module ClassMethods
       def next(path, context={}, previous=nil)
         path.read_path
-        new(path.current_path, index: path.index, context: context, previous: previous)
+        dir_model = new(path.current_path, index: path.index, context: context, previous: previous)
+
+        if dir_model.has_relations?
+          current_position = path.index
+          path.rewind
+          loop do # loop until find related file (has_one relation)
+            path.read_path
+            break if dir_model.append_dir_model(path.current_path, index: path.index, context: context)
+          end
+          path.set_position(current_position)
+        end
+        
+        dir_model
       end
     end
 
@@ -41,28 +49,12 @@ module DirModel
 
     def match?
       return if load_state == :loaded
-      @_match = loader { find_match }
+      @_match = find_match.tap { @load_state = :loaded }
     end
     alias_method :load, :match?
 
     def find_match
-      self.class.file_names.each do |file_name|
-        options = self.class.options(file_name)
-
-        if match = (source_path||'').match(options[:regex].call)
-          @file_infos = { file: file_name, options: options.merge(match: match) }
-          return true
-        end
-      end
-      false
+      @_match = (source_path||'').match(self.class.options[:regex].call)
     end
-
-    def loader
-      @load_state = :loading
-      result = yield
-      @load_state = :loaded
-      result
-    end
-
   end
 end

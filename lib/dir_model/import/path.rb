@@ -6,8 +6,8 @@ module DirModel
       attr_reader :index
       attr_reader :current_path
 
-      def initialize(path)
-        @path, @index = path, -1
+      def initialize(dir_path)
+        @path, @index = dir_path, -1
         reset!
       end
 
@@ -43,6 +43,14 @@ module DirModel
         @current_path = ruby_path[index]
         set_end unless current_path
         current_path
+      end
+      
+      def set_position(index)
+        @index = index
+      end
+      
+      def rewind
+        set_position(-1)
       end
 
       protected

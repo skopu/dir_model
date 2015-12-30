@@ -4,11 +4,9 @@ module DirModel
       extend ActiveSupport::Concern
 
       included do
-        self.file_names.each do |*args|
-          define_skip_method(*args)
-          define_file_method(*args)
-          define_extension_method(*args)
-        end
+        define_skip_method(self.file_name)
+        define_file_method(self.file_name)
+        define_extension_method(self.file_name)
       end
 
       module ClassMethods
@@ -18,7 +16,7 @@ module DirModel
         # Define default skip method for a file
         # @param file_name [Symbol] the file: name
         def define_skip_method(file_name)
-          define_method("#{file_name}_skip?") do
+          define_method(:skip?) do
             !self.public_send(file_name).try(:present?)
           end
         end
