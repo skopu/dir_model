@@ -2,7 +2,7 @@ module DirModel
   module Import
     extend ActiveSupport::Concern
 
-    attr_reader :context, :source_path, :index, :previous
+    attr_reader :context, :source_path, :index, :previous, :foreign_value
 
     def initialize(path, options={})
       super # set parent
@@ -10,6 +10,7 @@ module DirModel
       @index, @previous      = options[:index], options[:previous].try(:dup)
       @load_state            = :ghost
       @file_infos            = {}
+      @foreign_value         = options[:foreign_value]
     end
 
     def skip?
@@ -29,17 +30,36 @@ module DirModel
         path.read_path
         dir_model = new(path.current_path, index: path.index, context: context, previous: previous)
 
+        # unless dir_model.skip?
+
         if dir_model.has_relations?
-          current_position = path.index
-          path.rewind
-          loop do # loop until find related file (has_one relation)
-            path.read_path
-            break if dir_model.append_dir_model(path.current_path, index: path.index, context: context)
+          if dir_model.has_one?
+            search(path, context) do
+              dir_model.append_dir_model(path.current_path, index: path.index, context: context)
+            end
           end
-          path.set_position(current_position)
+          if dir_model.has_many?
+            search(path, context) do
+              dir_model.append_dir_models(path.current_path, index: path.index, context: context)
+            end
+          end
         end
-        
+
         dir_model
+      end
+
+      private
+
+      def search(path, context)
+        return unless block_given?
+
+        current_position = path.index
+        path.rewind
+        while !path.end? do
+          path.read_path
+          yield
+        end
+        path.set_position(current_position)
       end
     end
 
@@ -54,7 +74,15 @@ module DirModel
     alias_method :load, :match?
 
     def find_match
-      @_match = (source_path||'').match(self.class.options[:regex].call)
+      @_match = (source_path||'').match(get_regexp)
+    end
+
+    def get_regexp
+      if foreign_value
+        Regexp.new(self.class.options[:regex].call(foreign_value), Regexp::IGNORECASE)
+      else
+        self.class.options[:regex].call
+      end
     end
   end
 end

@@ -52,6 +52,8 @@ You can have access at the file through
 
 #### Relation
 
+### Has One
+
 A dir_model can have a relation like `has_one` basically is
 
 ```ruby
@@ -71,6 +73,39 @@ end
 ```ruby
 parent_instance.dependency # => ChildImportDirModel
 child.parent # => parent_instance
+```
+
+### Has Many
+
+You can define an `has_many` relation with another `DirModel`, is this case syntax is a bit different you have to pass a `foreign_key`, basically the name of the method should return a value will be replace in the regex in children relationships, like examples below
+
+NOTE regex on child pass explicitly the value
+
+```ruby
+class ZoneDirModel
+  include DirModel::Model
+  include DirModel::Import
+  file :image, regex: ->(foreign_value) { "Zones\/#{foreign_value}\/Zone_(?<zone_id>.*)\.(?<extension>png|jpg)" }
+end
+```
+
+```ruby
+class SectorDirModel
+  include DirModel::Model
+  file :image, regex: -> { /Sectors\/Sector_(?<sector_id>.*)\.(?<extension>png|jpg)/i }
+end
+```
+
+```ruby
+class SectorImportDirModel < SectorDirModel
+  include DirModel::Import
+
+  has_many :dependencies, ZoneDirModel, foreign_key: :sector_name
+
+  def sector_name
+    'sector_1'
+  end
+end
 ```
 
 ### Export

@@ -20,6 +20,8 @@ class BasicExportDirModel < BasicDirModel
   end
 end
 
+# has_one
+
 class ChildImportDirModel
   include DirModel::Model
   include DirModel::Import
@@ -28,4 +30,27 @@ end
 
 class ParentImportDirModel < BasicImportDirModel
   has_one :dependency, ChildImportDirModel
+end
+
+# has_many
+
+class ZoneDirModel
+  include DirModel::Model
+  include DirModel::Import
+  file :image, regex: ->(foreign_value) { "Zones\/#{foreign_value}\/Zone_(?<zone_id>.*)\.(?<extension>png|jpg)" }
+end
+
+class SectorDirModel
+  include DirModel::Model
+  file :image, regex: -> { /Sectors\/Sector_(?<sector_id>.*)\.(?<extension>png|jpg)/i }
+end
+
+class SectorImportDirModel < SectorDirModel
+  include DirModel::Import
+
+  has_many :dependencies, ZoneDirModel, foreign_key: :sector_name
+
+  def sector_name
+    'sector_1'
+  end
 end

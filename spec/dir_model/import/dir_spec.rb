@@ -80,22 +80,41 @@ describe DirModel::Import::Dir do
       end
     end
   end
-  
-  context 'with relation' do
-    let(:model_class) { ParentImportDirModel }
-    let(:instance)    { described_class.new source_path, model_class }
 
-    it 'should fill the relation' do
-      found = false
-      while dir_model = instance.next do
-        if dir_model.source_path == 'spec/fixtures/unzip_dir/zones/sector_1/zone_1.png'
-          expect(dir_model.dependency).to be_present
-          expect(dir_model.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.png')
-          expect(dir_model.dependency.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.json')
-          found = true
+  context 'with relation' do
+    let(:instance) { described_class.new source_path, model_class }
+    context 'with has_one' do
+      let(:model_class) { ParentImportDirModel }
+
+      it 'should fill the relation' do
+        found = false
+        while dir_model = instance.next do
+          if dir_model.source_path == 'spec/fixtures/unzip_dir/zones/sector_1/zone_1.png'
+            expect(dir_model.dependency).to be_present
+            expect(dir_model.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.png')
+            expect(dir_model.dependency.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.json')
+            found = true
+          end
         end
+        expect(found).to eql(true)
       end
-      expect(found).to eql(true)
+    end
+    context 'with has_many' do
+      let(:model_class) { SectorImportDirModel }
+
+      it 'should fill the relation' do
+        found = false
+        while dir_model = instance.next do
+          unless dir_model.skip? # Sector found => SectorImportDirModel
+            expect(dir_model.dependencies).to be_present
+            expect(dir_model.source_path).to eql('spec/fixtures/unzip_dir/sectors/sector_1.png')
+            expect(dir_model.dependencies.size).to eql(1)
+            expect(dir_model.dependencies.first.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.png')
+            found = true
+          end
+        end
+        expect(found).to eql(true)
+      end
     end
   end
 

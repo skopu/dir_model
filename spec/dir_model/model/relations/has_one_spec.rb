@@ -30,7 +30,7 @@ describe DirModel::Model::Relations do
     let(:options)         { { parent: parent_instance } }
     let(:instance)        { BasicImportDirModel.new(source_path, {}) }
     let(:parent_instance) { ParentImportDirModel.new('zones/sector_1/zone_1.png') }
-    
+
     describe '#has_one' do
       it 'should have accessor defined' do
         expect(parent_instance).to be_respond_to(:dependency)
