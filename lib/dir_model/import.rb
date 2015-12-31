@@ -30,17 +30,17 @@ module DirModel
         path.read_path
         dir_model = new(path.current_path, index: path.index, context: context, previous: previous)
 
-        # unless dir_model.skip?
-
-        if dir_model.has_relations?
-          if dir_model.has_one?
-            search(path, context) do
-              dir_model.append_dir_model(path.current_path, index: path.index, context: context)
+        unless dir_model.skip?
+          if dir_model.has_relations?
+            if dir_model.has_one?
+              search(path, context) do
+                dir_model.append_dir_model(path.current_path, index: path.index, context: context)
+              end
             end
-          end
-          if dir_model.has_many?
-            search(path, context) do
-              dir_model.append_dir_models(path.current_path, index: path.index, context: context)
+            if dir_model.has_many?
+              search(path, context) do
+                dir_model.append_dir_models(path.current_path, index: path.index, context: context)
+              end
             end
           end
         end
