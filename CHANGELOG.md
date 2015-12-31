@@ -1,3 +1,7 @@
+### VERSION 0.5.1
+
+* Add relation has_many to a dir_model
+
 ### VERSION 0.5.0
 
 * Add relation has_one to a dir_model
