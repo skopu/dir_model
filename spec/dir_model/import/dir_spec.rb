@@ -106,10 +106,10 @@ describe DirModel::Import::Dir do
         found = false
         while dir_model = instance.next do
           unless dir_model.skip? # Sector found => SectorImportDirModel
-            expect(dir_model.dependencies).to be_present
+            expect(dir_model.zones).to be_present
             expect(dir_model.source_path).to eql('spec/fixtures/unzip_dir/sectors/sector_1.png')
-            expect(dir_model.dependencies.size).to eql(1)
-            expect(dir_model.dependencies.first.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.png')
+            expect(dir_model.zones.size).to eql(1)
+            expect(dir_model.zones.first.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.png')
             found = true
           end
         end

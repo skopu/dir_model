@@ -34,10 +34,17 @@ end
 
 # has_many
 
+class ZoneMetadataDirModel
+  include DirModel::Model
+  include DirModel::Import
+  file :metadata, regex: -> { /Zones\/Sector_(?<sector_id>.*)\/Zone_(?<zone_id>.*)\.(?<extension>json)/i }
+end
+
 class ZoneDirModel
   include DirModel::Model
   include DirModel::Import
   file :image, regex: ->(foreign_value) { "Zones\/#{foreign_value}\/Zone_(?<zone_id>.*)\.(?<extension>png|jpg)" }
+  has_one :metadata, ZoneMetadataDirModel
 end
 
 class SectorDirModel
@@ -48,7 +55,7 @@ end
 class SectorImportDirModel < SectorDirModel
   include DirModel::Import
 
-  has_many :dependencies, ZoneDirModel, foreign_key: :sector_name
+  has_many :zones, ZoneDirModel, foreign_key: :sector_name
 
   def sector_name
     'sector_1'

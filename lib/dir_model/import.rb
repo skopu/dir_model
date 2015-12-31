@@ -9,7 +9,6 @@ module DirModel
       @source_path, @context = path, OpenStruct.new(options[:context])
       @index, @previous      = options[:index], options[:previous].try(:dup)
       @load_state            = :ghost
-      @file_infos            = {}
       @foreign_value         = options[:foreign_value]
     end
 
@@ -27,45 +26,54 @@ module DirModel
 
     module ClassMethods
       def next(path, context={}, previous=nil)
+        return if path.end?
+
         path.read_path
         dir_model = new(path.current_path, index: path.index, context: context, previous: previous)
-
-        unless dir_model.skip?
-          if dir_model.has_relations?
-            if dir_model.has_one?
-              search(path, context) do
-                dir_model.append_dir_model(path.current_path, index: path.index, context: context)
-              end
-            end
-            if dir_model.has_many?
-              search(path, context) do
-                dir_model.append_dir_models(path.current_path, index: path.index, context: context)
-              end
-            end
-          end
-        end
+        find_relations(dir_model, path, context)
 
         dir_model
       end
 
       private
 
+      def find_relations(dir_model, path, context)
+        unless dir_model.skip?
+          if dir_model.has_relations?
+            if dir_model.has_one?
+              child = search(path, context) do |_path, _context|
+                dir_model.append_dir_model(_path.current_path, index: _path.index, context: _context)
+              end.first
+              find_relations(child, path, context) if child
+            end
+            if dir_model.has_many?
+              children = search(path, context) do |_path, _context|
+                dir_model.append_dir_models(_path.current_path, index: _path.index, context: _context)
+              end
+              children.each { |_child| find_relations(_child, path, context) }
+            end
+          end
+        end
+      end
+
       def search(path, context)
         return unless block_given?
 
+        dir_models = []
         current_position = path.index
         path.rewind
         while !path.end? do
           path.read_path
-          yield
+          dir_models << yield(path, context)
         end
         path.set_position(current_position)
+        dir_models.uniq.compact
       end
     end
 
     private
 
-    attr_reader :load_state, :file_infos
+    attr_reader :load_state
 
     def match?
       return if load_state == :loaded
