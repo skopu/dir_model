@@ -40,11 +40,17 @@ module DirModel
       dir_path  = get_value_of(options[:path])
       file_path = File.join(dir_path, get_value_of(options[:name]))
 
-      mkdir { File.join(@root_path, dir_path) }
-
       file_path = ensure_extension(file_path, file_name)
 
-      File.open(File.join(@root_path, file_path), 'wb') {|f| f.write(self.public_send(file_name).read) }
+      full_path = File.join(@root_path, file_path)
+
+      mkdir { File.dirname(full_path) }
+
+      begin
+        File.open(full_path, 'wb') {|f| f.write(self.public_send(file_name).read) }
+      rescue Errno::ENOENT => e
+        warn e.message
+      end
     ensure
       @generated = true
     end
