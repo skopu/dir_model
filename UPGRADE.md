@@ -2,7 +2,7 @@
 
 # Upgrading from 0.4.0 to 0.5.0
 
-* Ensure you have only on definition of `file:` by dir_model
+* Ensure you have only one definition of `file:` by dir_model
 
 # Upgrading from 0.2.0 to 0.3.0
 

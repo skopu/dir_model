@@ -4,8 +4,8 @@ module DirModel
       extend ActiveSupport::Concern
 
       included do
-        define_skip_method(self.file_name)
         define_file_method(self.file_name)
+        define_skip_method(self.file_name)
         define_extension_method(self.file_name)
       end
 
@@ -17,7 +17,19 @@ module DirModel
         # @param file_name [Symbol] the file: name
         def define_skip_method(file_name)
           define_method(:skip?) do
-            !self.public_send(file_name).try(:present?)
+            _file = self.public_send(file_name)
+
+            return true if _file.nil?
+            if _file.respond_to?(:exists?) # Carrierwave with remote file
+              return true unless _file.exists?
+            else
+              if _file.respond_to?(:path) # Locale file
+                return true unless File.exists?(_file.path)
+              end
+            end
+            return true unless _file.respond_to?(:read)
+
+            false
           end
         end
 
@@ -50,8 +62,9 @@ module DirModel
 
         def file(file_name, options={})
           super
-          define_skip_method(file_name)
+
           define_file_method(file_name)
+          define_skip_method(file_name)
           define_extension_method(file_name)
         end
       end

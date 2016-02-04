@@ -1,13 +1,12 @@
 require 'spec_helper'
 
 describe DirModel::Export::Files do
-  let(:source_model) { double(zone: double(present?: true)) }
+  let(:source_model) { double }
   let(:klass)        { BasicExportDirModel }
   let(:instance)     { klass.new(source_model, {}) }
 
-  it 'should have image_skip? method' do
+  it 'should have skip? method' do
     expect(instance).to be_respond_to(:skip?)
-    expect(instance.skip?).to eql(false)
   end
 
   shared_examples 'call source_model file and file extension method' do |extension|
