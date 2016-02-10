@@ -5,13 +5,20 @@ describe DirModel::Import::Dir do
   let(:model_class) { BasicImportDirModel }
   let(:instance)    { described_class.new source_path, model_class, 'some_context' => true }
   let(:paths)  do
-    [ 'spec/fixtures/unzip_dir/sectors',
+    [
+      'spec/fixtures/unzip_dir/sectors',
+      'spec/fixtures/unzip_dir/sectors/sector_1.json',
       'spec/fixtures/unzip_dir/sectors/sector_1.png',
+      'spec/fixtures/unzip_dir/sectors/sector_2.json',
+      'spec/fixtures/unzip_dir/sectors/sector_2.png',
       'spec/fixtures/unzip_dir/zones',
       'spec/fixtures/unzip_dir/zones/sector_1',
       'spec/fixtures/unzip_dir/zones/sector_1/zone_1.json',
       'spec/fixtures/unzip_dir/zones/sector_1/zone_1.png',
- ]
+      'spec/fixtures/unzip_dir/zones/sector_2',
+      'spec/fixtures/unzip_dir/zones/sector_2/zone_2.json',
+      'spec/fixtures/unzip_dir/zones/sector_2/zone_2.png'
+    ]
   end
 
   describe '#context' do
@@ -75,6 +82,9 @@ describe DirModel::Import::Dir do
         expect(subject.next.index).to eql(0)
         expect(subject.next.index).to eql(2)
         expect(subject.next.index).to eql(4)
+        expect(subject.next.index).to eql(6)
+        expect(subject.next.index).to eql(8)
+        expect(subject.next.index).to eql(10)
 
         expect { subject.next }.to raise_error(StopIteration)
       end
@@ -100,7 +110,7 @@ describe DirModel::Import::Dir do
       end
     end
     context 'with has_many' do
-      let(:model_class) { SectorImportDirModel }
+      let(:model_class) { SectorImportDir }
 
       it 'should fill the relation' do
         found = false
@@ -111,6 +121,7 @@ describe DirModel::Import::Dir do
             expect(dir_model.zones.size).to eql(1)
             expect(dir_model.zones.first.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.png')
             found = true
+            break
           end
         end
         expect(found).to eql(true)

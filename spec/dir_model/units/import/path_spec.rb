@@ -4,18 +4,27 @@ describe DirModel::Import::Path do
   let(:source_path) { 'spec/fixtures/unzip_dir' }
   let(:instance)    { described_class.new(source_path) }
   let(:paths)  do
-    [ 'spec/fixtures/unzip_dir/sectors',
+    [
+      'spec/fixtures/unzip_dir/sectors',
+      'spec/fixtures/unzip_dir/sectors/sector_1.json',
       'spec/fixtures/unzip_dir/sectors/sector_1.png',
+      'spec/fixtures/unzip_dir/sectors/sector_2.json',
+      'spec/fixtures/unzip_dir/sectors/sector_2.png',
       'spec/fixtures/unzip_dir/zones',
       'spec/fixtures/unzip_dir/zones/sector_1',
-      'spec/fixtures/unzip_dir/zones/sector_1/zone_1.png' ]
+      'spec/fixtures/unzip_dir/zones/sector_1/zone_1.json',
+      'spec/fixtures/unzip_dir/zones/sector_1/zone_1.png',
+      'spec/fixtures/unzip_dir/zones/sector_2',
+      'spec/fixtures/unzip_dir/zones/sector_2/zone_2.json',
+      'spec/fixtures/unzip_dir/zones/sector_2/zone_2.png'
+    ]
   end
 
   describe '#size' do
     subject { instance.size }
 
     it 'should return number of paths' do
-      expect(subject).to eql(6)
+      expect(subject).to eql(12)
     end
   end
 
@@ -68,8 +77,8 @@ describe DirModel::Import::Path do
 
     it 'works and goes to end paths' do
       expect(instance.previous_path).to eql('spec/fixtures/unzip_dir/sectors')
-      expect(instance.current_path).to eql('spec/fixtures/unzip_dir/sectors/sector_1.png')
-      expect(instance.next_path).to eql('spec/fixtures/unzip_dir/zones')
+      expect(instance.current_path).to eql('spec/fixtures/unzip_dir/sectors/sector_1.json')
+      expect(instance.next_path).to eql('spec/fixtures/unzip_dir/sectors/sector_1.png')
     end
   end
 
@@ -82,11 +91,8 @@ describe DirModel::Import::Path do
 
     it 'works and goes to end paths' do
       expect(instance.read_path).to eql('spec/fixtures/unzip_dir/sectors')
-      expect(instance.read_path).to eql('spec/fixtures/unzip_dir/sectors/sector_1.png')
-      expect(instance.read_path).to eql('spec/fixtures/unzip_dir/zones')
-      expect(instance.read_path).to eql('spec/fixtures/unzip_dir/zones/sector_1')
-      expect(instance.read_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.json')
-      expect(instance.read_path).to eql('spec/fixtures/unzip_dir/zones/sector_1/zone_1.png')
+      expect(instance.read_path).to eql('spec/fixtures/unzip_dir/sectors/sector_1.json')
+      # and so on....
     end
   end
 

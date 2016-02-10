@@ -30,7 +30,7 @@ module DirModel
 
         path.read_path
         dir_model = new(path.current_path, index: path.index, context: context, previous: previous)
-        find_relations(dir_model, path, context)
+        find_relations(dir_model, path, context) unless dir_model.skip?
 
         dir_model
       end
@@ -38,20 +38,18 @@ module DirModel
       private
 
       def find_relations(dir_model, path, context)
-        unless dir_model.skip?
-          if dir_model.has_relations?
-            if dir_model.has_one?
-              child = search(path, context) do |_path, _context|
-                dir_model.append_dir_model(_path.current_path, index: _path.index, context: _context)
-              end.first
-              find_relations(child, path, context) if child
+        if dir_model.has_relations?
+          if dir_model.has_one?
+            child = search(path, context) do |_path, _context|
+              dir_model.append_dir_model(_path.current_path, index: _path.index, context: _context)
+            end.first
+            find_relations(child, path, context) if child
+          end
+          if dir_model.has_many?
+            children = search(path, context) do |_path, _context|
+              dir_model.append_dir_models(_path.current_path, index: _path.index, context: _context)
             end
-            if dir_model.has_many?
-              children = search(path, context) do |_path, _context|
-                dir_model.append_dir_models(_path.current_path, index: _path.index, context: _context)
-              end
-              children.each { |_child| find_relations(_child, path, context) }
-            end
+            children.each { |_child| find_relations(_child, path, context) }
           end
         end
       end

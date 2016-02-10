@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe DirModel::Import do
   let(:path)         { DirModel::Import::Path.new('spec/fixtures/unzip_dir') }
-  let(:parent_klass) { SectorImportDirModel }
+  let(:parent_klass) { SectorImportDir }
 
   it 'should fill children relations' do
     sector_dir_model = nil
