@@ -60,13 +60,17 @@ A dir_model can have a relation like `has_one` basically is
 class ChildImportDirModel
   include DirModel::Model
   include DirModel::Import
-  file :metadata, regex: -> { /Zones\/Sector_(?<sector_id>.*)\/Zone_(?<zone_id>.*)\.(?<extension>json)/i }
+  file :metadata, regex: ->(foreign_value) { "Zones\/(?<sector_name>#{foreign_value})\/Zone_(?<zone_id>.*)\.(?<extension>json)" }
 end
 ```
 
 ```ruby
 class ParentImportDirModel < BasicImportDirModel
-  has_one :dependency, ChildImportDirModel
+  has_one :dependency, ChildImportDirModel, foreign_key: :sector_name
+
+  def sector_name
+    "sector_#{sector_id}"
+  end
 end
 ```
 
@@ -85,7 +89,7 @@ NOTE regex on child pass explicitly the value
 class ZoneDirModel
   include DirModel::Model
   include DirModel::Import
-  file :image, regex: ->(foreign_value) { "Zones\/#{foreign_value}\/Zone_(?<zone_id>.*)\.(?<extension>png|jpg)" }
+  file :image, regex: ->(foreign_value) { "Zones\/(?<sector_name>#{foreign_value})\/Zone_(?<zone_id>.*)\.(?<extension>png|jpg)" }
 end
 ```
 

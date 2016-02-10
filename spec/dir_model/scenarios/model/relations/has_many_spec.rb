@@ -5,7 +5,7 @@ describe DirModel::Model::Relations do
     let(:source_path)     { 'zones/sector_1/zone_1.png' }
     let(:options)         { { parent: parent_instance } }
     let(:instance)        { ZoneDirModel.new(source_path, {}) }
-    let(:parent_instance) { SectorImportDirModel.new('sectors/sector_1.png') }
+    let(:parent_instance) { SectorImportDir.new('sectors/sector_1.png') }
 
     describe '#has_many' do
       it 'should have accessor defined' do

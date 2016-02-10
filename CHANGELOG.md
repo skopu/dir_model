@@ -1,3 +1,7 @@
+### VERSION 0.6.0
+
+* Fix relations
+
 ### VERSION 0.5.1
 
 * Add relation has_many to a dir_model

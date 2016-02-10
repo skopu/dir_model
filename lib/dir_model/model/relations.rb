@@ -21,9 +21,13 @@ module DirModel
       # @return [Model] return the child if it is valid, otherwise returns nil
       def append_dir_model(source_path, options={})
         relation_name = self.class.has_one_relationship.keys.first
-        related_class = self.class.has_one_relationship.values.first
+        _options      = self.class.has_one_relationship.values.first
+        related_class = _options[:dir_model_class]
+        foreign_key   = _options[:foreign_key]
+        foreign_value = self.send(foreign_key)
 
-        related_dir_model = related_class.new(source_path, options.reverse_merge(parent: self))
+        related_dir_model = related_class.new(source_path,
+          options.reverse_merge(parent: self, foreign_value: foreign_value))
 
         return unless related_dir_model
 
@@ -74,12 +78,12 @@ module DirModel
         #
         # @param [Symbol] relation_name the name of the relation
         # @param [DirModel::Import] dir_model_class class of the relation
-        def has_one(relation_name, dir_model_class)
+        def has_one(relation_name, dir_model_class, options)
           raise "for now, DirModel's has_one may only be called once" if @_has_one_relationship.present?
 
           relation_name = relation_name.to_sym
 
-          merge_has_one_relationship(relation_name => dir_model_class)
+          merge_has_one_relationship(relation_name => { dir_model_class: dir_model_class }.merge(options))
 
           define_method(:has_one?) do
             true
@@ -92,6 +96,10 @@ module DirModel
           define_method(relation_name) do
             instance_variable_get("@#{relation_name}")
           end
+        end
+
+        def has_one?
+          !!@_has_one_relationship
         end
 
         # Defines a relationship between a dir model
@@ -117,6 +125,14 @@ module DirModel
             variable_name = "@#{relation_name}"
             instance_variable_get(variable_name) || instance_variable_set(variable_name, [])
           end
+        end
+
+        def has_many?
+          !!@_has_many_relationship
+        end
+
+        def has_relations?
+          has_one? || has_many?
         end
       end
     end

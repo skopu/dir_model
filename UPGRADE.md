@@ -1,5 +1,9 @@
 # Upgrading
 
+# Upgrading from 0.5.1 to 0.6.0
+
+* relation need to have a foreign_key and dir_model related need to have a regex with the foreign_key in params
+
 # Upgrading from 0.4.0 to 0.5.0
 
 * Ensure you have only one definition of `file:` by dir_model
