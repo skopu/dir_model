@@ -65,6 +65,6 @@ class SectorImportDir < SectorDirModel
   has_many :zones, ZoneDirModel, foreign_key: :sector_name
 
   def sector_name
-    'sector_1'
+    "sector_#{sector_id}"
   end
 end
