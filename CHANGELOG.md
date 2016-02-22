@@ -1,3 +1,7 @@
+### VERSION 0.6.1
+
+* escape special characters on foreign key values. Due of this relations weren't be found.
+
 ### VERSION 0.6.0
 
 * Fix relations

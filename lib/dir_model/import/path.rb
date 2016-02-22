@@ -44,11 +44,11 @@ module DirModel
         set_end unless current_path
         current_path
       end
-      
+
       def set_position(index)
         @index = index
       end
-      
+
       def rewind
         set_position(-1)
       end
@@ -56,7 +56,7 @@ module DirModel
       protected
 
       def ruby_path
-        @ruby_path ||= ::Dir.glob("#{path}/**/*")
+        @ruby_path ||= ::Dir.glob("#{path}/**/*").sort
       end
 
       def set_end
