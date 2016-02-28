@@ -41,14 +41,24 @@ module DirModel
         if dir_model.has_relations?
           if dir_model.has_one?
             child = search(path, context) do |_path, _context|
-              dir_model.append_dir_model(_path.current_path, index: _path.index, context: _context)
+              if dir_model.class.has_one_relationship.empty?
+                nil
+              else
+                related_dir_model = nil
+                dir_model.class.has_one_relationship.each do |relation_name, _options|
+                  related_dir_model = dir_model.append_dir_model(_path.current_path, index: _path.index, context: _context, relation_name: relation_name, options: _options)
+                end
+                related_dir_model
+              end
             end.first
+            # Recursive call on children
             find_relations(child, path, context) if child
           end
           if dir_model.has_many?
             children = search(path, context) do |_path, _context|
               dir_model.append_dir_models(_path.current_path, index: _path.index, context: _context)
             end
+            # Recursive call on children
             children.each { |_child| find_relations(_child, path, context) }
           end
         end
