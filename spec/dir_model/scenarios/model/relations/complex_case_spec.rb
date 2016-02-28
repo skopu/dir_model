@@ -7,6 +7,10 @@ describe DirModel::Model::Relations do
         DirModel::Import::Dir.new('spec/fixtures/unzip_dir', SectorImportDirModel, {}).each
       end
 
+      it 'Don\'t throw There are more of one metadata' do
+        expect { subject.next }.to_not raise_error
+       end
+
       it 'should work properly' do
         dir_model = subject.next
         expect(dir_model).to be_a(SectorImportDirModel)

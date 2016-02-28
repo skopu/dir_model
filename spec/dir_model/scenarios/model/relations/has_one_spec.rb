@@ -20,7 +20,7 @@ describe DirModel::Model::Relations do
       subject do
         parent_instance
           .append_dir_model(source_path, { relation_name: :dependency,
-            options: { foreign_key: :sector_name, dir_model_class: ChildImportDirModel }})
+            relation_options: { foreign_key: :sector_name, dir_model_class: ChildImportDirModel }})
       end
 
       it 'appends the child and returns it' do

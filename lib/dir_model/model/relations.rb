@@ -21,7 +21,7 @@ module DirModel
       # @return [Model] return the child if it is valid, otherwise returns nil
       def append_dir_model(source_path, options={})
         relation_name = options[:relation_name]
-        _options      = options[:options]
+        _options      = options[:relation_options]
         related_class = _options[:dir_model_class]
         foreign_key   = _options[:foreign_key]
         foreign_value = self.send(foreign_key)
@@ -85,6 +85,10 @@ module DirModel
 
           define_method(:has_one?) do
             true
+          end
+
+          define_method(:has_one) do
+            self.class.has_one_relationship
           end
 
           define_method("#{relation_name}=") do |value|
