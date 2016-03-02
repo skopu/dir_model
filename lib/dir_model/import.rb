@@ -91,7 +91,7 @@ module DirModel
 
     def get_regexp
       if foreign_value
-        Regexp.new(self.class.options[:regex].call(Regexp.quote(foreign_value)), Regexp::IGNORECASE)
+        Regexp.new(self.class.options[:regex].call(foreign_value), Regexp::IGNORECASE)
       else
         self.class.options[:regex].call
       end

@@ -24,7 +24,7 @@ describe DirModel::Import::Path do
     subject { instance.size }
 
     it 'should return number of paths' do
-      expect(subject).to eql(13)
+      expect(subject).to eql(14)
     end
   end
 

@@ -23,6 +23,10 @@ describe DirModel::Model::Relations do
         expect(dir_model.children.first.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1+2/zone_1+2.png')
         expect(dir_model.children.first.metadata).to be_a(ZoneMetadataImportDirModel)
         expect(dir_model.children.first.metadata.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1+2/zone_1+2.json')
+        expect(dir_model.children.first.bim_model).to be_a(ZoneBimModelImportDirModel)
+        expect(dir_model.children.first.bim_model.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1+2/zone_1+2.dae')
+        expect(dir_model.children.first.bim_meta).to be_a(ZoneBimMetaImportDirModel)
+        expect(dir_model.children.first.bim_meta.source_path).to eql('spec/fixtures/unzip_dir/zones/sector_1+2/zone_1+2.dae.json')
 
         dir_model = subject.next
         expect(dir_model).to be_a(SectorImportDirModel)
