@@ -16,7 +16,7 @@ end
 class ZoneMetadataImportDirModel
   include DirModel::Model
   include DirModel::Import
-  file :metadata, regex: ->(foreign_value) { "Zones\/#{foreign_value}(?<!\\.\\w\\w\\w)\\.(?<extension>json)" }
+  file :metadata, regex: ->(foreign_value) { "Zones\\/#{foreign_value}(?<!\\.\\w\\w\\w)\\.(?<extension>json)" }
 end
 
 class ZoneImportDirModel
@@ -27,7 +27,7 @@ class ZoneImportDirModel
   has_one :bim_model, ZoneBimModelImportDirModel, foreign_key: :sector_zone_name
   has_one :bim_meta,  ZoneBimMetaImportDirModel,  foreign_key: :sector_zone_name
   def sector_zone_name
-    "#{Regexp.quote(sector_name)}\/zone_#{Regexp.quote(zone_id)}"
+    "#{Regexp.quote(sector_name)}\\/zone_#{Regexp.quote(zone_id)}"
   end
 end
 
