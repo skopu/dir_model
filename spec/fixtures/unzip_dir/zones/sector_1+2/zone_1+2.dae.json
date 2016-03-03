@@ -1,0 +1,6 @@
+{
+  "SubView": {
+    "ZoneName": "Zone Name From Json File",
+    "ViewName": "Default",
+    "SubViewName": "SubViewName" }
+}

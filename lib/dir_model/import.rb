@@ -41,14 +41,20 @@ module DirModel
         if dir_model.has_relations?
           if dir_model.has_one?
             child = search(path, context) do |_path, _context|
-              dir_model.append_dir_model(_path.current_path, index: _path.index, context: _context)
+              related_dir_model = nil
+              dir_model.has_one.each do |name, options|
+                related_dir_model = dir_model.append_dir_model(_path.current_path, index: _path.index, context: _context, relation_name: name, relation_options: options)
+              end
+              related_dir_model
             end.first
+            # Recursive call on children
             find_relations(child, path, context) if child
           end
           if dir_model.has_many?
             children = search(path, context) do |_path, _context|
               dir_model.append_dir_models(_path.current_path, index: _path.index, context: _context)
             end
+            # Recursive call on children
             children.each { |_child| find_relations(_child, path, context) }
           end
         end
@@ -85,7 +91,7 @@ module DirModel
 
     def get_regexp
       if foreign_value
-        Regexp.new(self.class.options[:regex].call(Regexp.quote(foreign_value)), Regexp::IGNORECASE)
+        Regexp.new(self.class.options[:regex].call(foreign_value), Regexp::IGNORECASE)
       else
         self.class.options[:regex].call
       end

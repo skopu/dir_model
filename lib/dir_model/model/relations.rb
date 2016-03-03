@@ -20,8 +20,8 @@ module DirModel
       #
       # @return [Model] return the child if it is valid, otherwise returns nil
       def append_dir_model(source_path, options={})
-        relation_name = self.class.has_one_relationship.keys.first
-        _options      = self.class.has_one_relationship.values.first
+        relation_name = options[:relation_name]
+        _options      = options[:relation_options]
         related_class = _options[:dir_model_class]
         foreign_key   = _options[:foreign_key]
         foreign_value = self.send(foreign_key)
@@ -79,14 +79,16 @@ module DirModel
         # @param [Symbol] relation_name the name of the relation
         # @param [DirModel::Import] dir_model_class class of the relation
         def has_one(relation_name, dir_model_class, options)
-          raise "for now, DirModel's has_one may only be called once" if @_has_one_relationship.present?
-
           relation_name = relation_name.to_sym
 
           merge_has_one_relationship(relation_name => { dir_model_class: dir_model_class }.merge(options))
 
           define_method(:has_one?) do
             true
+          end
+
+          define_method(:has_one) do
+            self.class.has_one_relationship
           end
 
           define_method("#{relation_name}=") do |value|
@@ -109,7 +111,6 @@ module DirModel
         # @param [Hash] basically for set :foreign_key
         def has_many(relation_name, dir_model_class, options)
           raise "for now, DirModel's has_many may only be called once" if @_has_many_relationship.present?
-
           relation_name = relation_name.to_sym
 
           merge_has_many_relationship(relation_name => { dir_model_class: dir_model_class }.merge(options))

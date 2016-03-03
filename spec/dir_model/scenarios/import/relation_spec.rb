@@ -6,6 +6,7 @@ describe DirModel::Import do
 
   it 'should fill children relations' do
     sector_dir_model = nil
+
     while _dir_model = parent_klass.next(path) do
       sector_dir_model = _dir_model unless _dir_model.skip?
     end

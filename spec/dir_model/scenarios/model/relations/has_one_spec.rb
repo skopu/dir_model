@@ -17,7 +17,11 @@ describe DirModel::Model::Relations do
     end
 
     describe '#append_dir_model' do
-      subject { parent_instance.append_dir_model(source_path) }
+      subject do
+        parent_instance
+          .append_dir_model(source_path, { relation_name: :dependency,
+            relation_options: { foreign_key: :sector_name, dir_model_class: ChildImportDirModel }})
+      end
 
       it 'appends the child and returns it' do
         expect(subject).to be_a(ChildImportDirModel)
