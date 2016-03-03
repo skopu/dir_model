@@ -1,3 +1,17 @@
+### VERSION 0.6.2
+
+* Removing escaping from the code, so now `foreign_key` should be escaped on the caller, basically user `Regexp.quote` :
+
+```
+class ParentImportDirModel < BasicImportDirModel
+  has_one :dependency, ChildImportDirModel, foreign_key: :sector_name
+
+  def sector_name
+    "sector_#{Regexp.quote(sector_id)}"
+  end
+end
+```
+
 ### VERSION 0.6.1
 
 * escape special characters on foreign key values. Due of this relations weren't be found.
